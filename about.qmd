@@ -1,0 +1,46 @@
+---
+title: "About This Project"
+---
+
+## Overview
+
+This site provides automated analysis of healthcare-related content from the podcast "Your Province. Your Premier." featuring Alberta Premier Danielle Smith and host Wayne Nelson.
+
+## How It Works
+
+1. **RSS Monitoring**: The system scans the podcast RSS feed for new episodes
+2. **Transcription**: Episodes are transcribed using AssemblyAI with speaker diarization
+3. **Content Analysis**: Claude AI analyzes transcripts for healthcare-related content
+4. **Audio Clips**: Key moments are extracted as audio clips
+5. **Publication**: Results are compiled into this Quarto book
+
+## Technology Stack
+
+- **R**: Data processing and orchestration
+- **AssemblyAI**: Speech-to-text transcription with speaker identification
+- **Claude API**: AI-powered content analysis
+- **Quarto**: Document generation and website publishing
+- **FFmpeg**: Audio clip extraction
+
+## Healthcare Topics
+
+The analysis focuses on content related to:
+
+- Physician and doctor-related discussions
+- Healthcare system and policy
+- Hospitals, clinics, and healthcare facilities
+- Alberta Health Services (AHS) and Covenant Health
+- Medical services, access, and wait times
+- Healthcare funding and reform
+- Patient care and outcomes
+- Primary care and family medicine
+- Emergency services
+- Mental health services
+
+## Disclaimer
+
+This analysis is automated and may not capture all nuances of the discussions. The transcripts and analysis are provided for informational purposes. For official statements, please refer to the original podcast episodes.
+
+## Source Code
+
+The code for this project is available in the project repository.

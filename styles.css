@@ -1,0 +1,117 @@
+/* Custom styles for Premier Podcast Summary */
+
+/* Highlight blocks */
+.highlight-block {
+  border-left: 4px solid #0d6efd;
+  padding-left: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.highlight-block.high-relevance {
+  border-left-color: #198754;
+}
+
+.highlight-block.medium-relevance {
+  border-left-color: #ffc107;
+}
+
+/* Blockquotes (for quotes) */
+blockquote {
+  font-style: italic;
+  color: #6c757d;
+  border-left: 3px solid #dee2e6;
+  padding-left: 1rem;
+  margin: 1rem 0;
+}
+
+/* Audio player styling */
+audio {
+  width: 100%;
+  max-width: 400px;
+  margin: 0.5rem 0;
+}
+
+/* Episode table */
+table {
+  width: 100%;
+}
+
+table th {
+  background-color: #f8f9fa;
+}
+
+/* Topics tags */
+.topics {
+  font-size: 0.875rem;
+  color: #6c757d;
+}
+
+/* Healthcare score badge */
+.healthcare-score {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-weight: bold;
+}
+
+.healthcare-score.high {
+  background-color: #d1e7dd;
+  color: #0f5132;
+}
+
+.healthcare-score.medium {
+  background-color: #fff3cd;
+  color: #664d03;
+}
+
+.healthcare-score.low {
+  background-color: #f8d7da;
+  color: #842029;
+}
+
+/* Timestamp styling */
+.timestamp {
+  font-family: monospace;
+  background-color: #e9ecef;
+  padding: 0.125rem 0.375rem;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+}
+
+/* Episode navigation */
+.episode-nav {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid #dee2e6;
+}
+
+/* Transcript formatting */
+.transcript {
+  line-height: 1.8;
+}
+
+.transcript h2 {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid #dee2e6;
+}
+
+.transcript strong {
+  color: #495057;
+}
+
+/* Dark mode adjustments */
+[data-bs-theme="dark"] blockquote {
+  color: #adb5bd;
+  border-left-color: #495057;
+}
+
+[data-bs-theme="dark"] .timestamp {
+  background-color: #343a40;
+}
+
+[data-bs-theme="dark"] table th {
+  background-color: #212529;
+}

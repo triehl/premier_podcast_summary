@@ -1,0 +1,47 @@
+---
+title: "Your Province. Your Premier. 12/20/2025 "
+date: 2025-12-20
+description: "Healthcare policy analysis from Premier Danielle Smith podcast"
+categories: [healthcare, policy, Alberta]
+---
+
+## Episode Overview
+**Air Date:** December 20, 2025
+
+This episode contains minimal healthcare discussion, focusing primarily on constitutional reform, education funding, and provincial autonomy. Healthcare mentions are limited to brief discussions about AISH program navigation requiring multiple doctor appointments and barriers to accessing family physicians for disability benefit applications.
+
+**Healthcare Focus Score:** 8%
+
+## Healthcare Highlights
+
+### Additional Mentions
+
+**[11:00 - 13:30]** Caller Jerry identifies healthcare system burden caused by AISH federal benefit application process, noting difficulty accessing family doctors and requiring four separate doctor appointments for disability paperwork.
+
+> "The 24% you speak of that haven't applied either don't have access to or have a family doctor. For myself—and you know that you have to apply for the tax credit first to be eligible to apply for the benefit. Having said that, that's four doctor's appointments and I have a family doctor... it's a burden on the healthcare system as a whole which is already short in this province."
+
+*Topics: family medicine, primary care, physician access, healthcare system capacity, disability services*
+
+<audio controls src="../data/episodes/2fa8689e-ddce-11f0-b9ff-93eb12eb3272/clips/clip_001_11-00.mp3">Your browser does not support audio.</audio>
+
+---
+
+**[13:30 - 14:15]** Premier acknowledges barrier of costly doctor assessments for disability applications and commits to exploring use of provincial approved doctors instead, mentioning $430 assessment fees as concern.
+
+> "I've already sent a note to my Assisted Living and Social Services minister to see if there's a way that we could have our own approved doctors be able to do these kinds of assessments, because some of the dollar figures we saw in that one report of $430 to go see a doctor seemed pretty high to us."
+
+*Topics: physician services, healthcare costs, disability assessments, medical services access*
+
+<audio controls src="../data/episodes/2fa8689e-ddce-11f0-b9ff-93eb12eb3272/clips/clip_002_13-30.mp3">Your browser does not support audio.</audio>
+
+---
+
+
+## Full Transcript
+
+[View the complete transcript](2025-12-20-your-province-your-premier-12202025_transcript.qmd)
+
+---
+
+*Episode Duration: 46 minutes*
+

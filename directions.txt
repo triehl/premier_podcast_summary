@@ -1,0 +1,22 @@
+We are going to create an app using R to do the following:
+
+- Scan an RSS feed for new podcasts. The podcasts are saved as .mp3 files. Use a caching system to only download and process new episodes. The episodes can be found here: https://feeds.megaphone.fm/CORU5449522127
+
+- Create a subagent that is an expert podcast transcriber. Use the podcast transcriber subagent found here: https://www.buildwithclaude.com/subagent/podcast-transcriber
+
+- Use the Claude console api to have the expert podcast transcriber to transcribe the podcast episode with acurate timestamps and identify speakers. Save the transcription as a quarto document.
+
+- Create a subagent that is an expert podcast content analysis expert. The agent will identify quotes and timestamps from the podcast transcript. Use the podcast content analysis expert subagent found here but have the agent focus on content related to physicians, healthcare, hospital, doctors, and the healthcare system: https://www.buildwithclaude.com/subagent/podcast-content-analyzer
+
+- Use the Claude console api to have the expert podcast content analysis agent identify highlights in bullet from related to physicians, healthcare, hospital, doctors, and the healthcare system. Include timestamps. Save the expert analysis as a quarto document.
+
+- Create a quarto book project in R with the following structure:
+  - The landing page will have a description of the podcast and a list of the podcast episodes sorted with the most recent first.
+  - Create a page for each episode. Show the episode date. Show the expert content analysis related to physicians, healthcare, hospital, doctors, and the healthcare system.
+  - Create a subpage with the full transcript created by the expert podcast transcriber.
+
+This will all be in R. The backend code will be in *.R files and the front end code will be in Quarto *.qmd files.
+
+A bonus would be to have short audio clips for the highlights identified by the expert podcast content analysis agent.
+
+Ask me any questions you need to clarify directions.

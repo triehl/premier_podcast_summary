@@ -1,0 +1,27 @@
+# R environment
+.Renviron
+.Rhistory
+.RData
+.Rproj.user/
+
+# Data directories (large files)
+data/
+cache/
+
+# Quarto build output
+_book/
+_freeze/
+.quarto/
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# IDE
+.vscode/
+*.Rproj
+
+/.quarto/

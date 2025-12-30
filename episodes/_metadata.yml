@@ -1,0 +1,9 @@
+# Shared metadata for episode pages
+
+format:
+  html:
+    toc: true
+    toc-depth: 3
+
+execute:
+  echo: false
