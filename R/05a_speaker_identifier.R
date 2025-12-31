@@ -66,8 +66,14 @@ identify_primary_speakers <- function(speaker_stats, utterances) {
     dplyr::group_by(speaker) |>
     dplyr::summarise(
       mentions_premier = sum(grepl("premier|danielle", text)),
-      says_welcome = sum(grepl("welcome to|your province|go ahead|calling from|on the line", text)),
-      says_thank_you_wayne = sum(grepl("thank you wayne|thanks wayne|hi wayne", text)),
+      says_welcome = sum(grepl(
+        "welcome to|your province|go ahead|calling from|on the line",
+        text
+      )),
+      says_thank_you_wayne = sum(grepl(
+        "thank you wayne|thanks wayne|hi wayne",
+        text
+      )),
       total_text = paste(text, collapse = " "),
       .groups = "drop"
     )
@@ -78,7 +84,10 @@ identify_primary_speakers <- function(speaker_stats, utterances) {
     dplyr::left_join(speaker_phrases, by = "speaker") |>
     dplyr::mutate(
       wayne_score = utterance_count * 2 + says_welcome * 10,
-      danielle_score = total_ms / 1000 + says_thank_you_wayne * 20 + mentions_premier * 5
+      danielle_score = total_ms /
+        1000 +
+        says_thank_you_wayne * 20 +
+        mentions_premier * 5
     )
 
   # Wayne has most utterances (talks frequently but briefly)
@@ -106,7 +115,12 @@ identify_primary_speakers <- function(speaker_stats, utterances) {
 #' @param wayne_code Wayne's speaker code (for intro context)
 #' @param context_ms Milliseconds of context to include (default 30000 = 30s)
 #' @return Character string with formatted context
-extract_caller_context <- function(utterances, speaker_code, wayne_code, context_ms = 30000) {
+extract_caller_context <- function(
+  utterances,
+  speaker_code,
+  wayne_code,
+  context_ms = 20000
+) {
   # Convert to tibble for easier manipulation
   utterance_df <- purrr::map_dfr(seq_along(utterances), function(i) {
     u <- utterances[[i]]
@@ -120,7 +134,7 @@ extract_caller_context <- function(utterances, speaker_code, wayne_code, context
   })
 
   # Find first appearance of this speaker
- first_appearance <- utterance_df |>
+  first_appearance <- utterance_df |>
     dplyr::filter(speaker == speaker_code) |>
     dplyr::slice(1)
 
@@ -177,14 +191,20 @@ identify_single_caller <- function(context) {
     )
   )
 
-  response <- tryCatch({
-    claude_request() |>
-      httr2::req_body_json(body) |>
-      httr2::req_perform()
-  }, error = function(e) {
-    log_msg("WARN", "Claude API call failed for caller identification: {e$message}")
-    return(NULL)
-  })
+  response <- tryCatch(
+    {
+      claude_request() |>
+        httr2::req_body_json(body) |>
+        httr2::req_perform()
+    },
+    error = function(e) {
+      log_msg(
+        "WARN",
+        "Claude API call failed for caller identification: {e$message}"
+      )
+      return(NULL)
+    }
+  )
 
   if (is.null(response)) {
     return(list(caller_name = NULL, confidence = "low", source = "unknown"))
@@ -202,12 +222,15 @@ identify_single_caller <- function(context) {
   clean_json <- trimws(clean_json)
 
   # Parse JSON
-  parsed <- tryCatch({
-    jsonlite::fromJSON(clean_json, simplifyVector = FALSE)
-  }, error = function(e) {
-    log_msg("WARN", "Failed to parse caller ID response: {e$message}")
-    list(caller_name = NULL, confidence = "low", source = "unknown")
-  })
+  parsed <- tryCatch(
+    {
+      jsonlite::fromJSON(clean_json, simplifyVector = FALSE)
+    },
+    error = function(e) {
+      log_msg("WARN", "Failed to parse caller ID response: {e$message}")
+      list(caller_name = NULL, confidence = "low", source = "unknown")
+    }
+  )
 
   # Ensure caller_name is uppercase if present
   if (!is.null(parsed$caller_name) && nchar(parsed$caller_name) > 0) {
@@ -233,7 +256,10 @@ identify_callers <- function(utterances, caller_codes, wayne_code) {
 
     if (!is.null(result$caller_name) && nchar(result$caller_name) > 0) {
       caller_mapping[[code]] <- result$caller_name
-      log_msg("INFO", "Identified speaker {code} as: {result$caller_name} (confidence: {result$confidence})")
+      log_msg(
+        "INFO",
+        "Identified speaker {code} as: {result$caller_name} (confidence: {result$confidence})"
+      )
     } else {
       caller_mapping[[code]] <- "CALLER"
       log_msg("INFO", "Could not identify speaker {code}, using CALLER")
@@ -276,11 +302,18 @@ identify_speakers <- function(raw_transcript) {
 
   # Identify remaining speakers as callers
   all_codes <- speaker_stats$speaker
-  caller_codes <- setdiff(all_codes, c(primary$wayne_code, primary$danielle_code))
+  caller_codes <- setdiff(
+    all_codes,
+    c(primary$wayne_code, primary$danielle_code)
+  )
 
   if (length(caller_codes) > 0) {
     log_msg("INFO", "Identifying {length(caller_codes)} potential caller(s)")
-    caller_mapping <- identify_callers(utterances, caller_codes, primary$wayne_code)
+    caller_mapping <- identify_callers(
+      utterances,
+      caller_codes,
+      primary$wayne_code
+    )
 
     # Merge caller mapping
     for (code in names(caller_mapping)) {

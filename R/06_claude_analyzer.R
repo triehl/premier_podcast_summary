@@ -1,6 +1,60 @@
 # Claude Healthcare Content Analyzer for Premier Podcast Summary
 # Uses Claude API to identify healthcare-related content in transcripts
 
+#' Find the timestamp where a quote begins using AssemblyAI word data
+#' @param quote The quote text to find
+#' @param raw_transcript Raw AssemblyAI response with word-level timestamps
+#' @return Timestamp string in MM:SS format, or NULL if not found
+find_quote_timestamp <- function(quote, raw_transcript) {
+  # Get all words with timestamps
+  words <- raw_transcript$words
+  if (is.null(words) || length(words) == 0) return(NULL)
+
+  # Normalize quote for matching (lowercase, remove extra spaces/punctuation)
+  quote_normalized <- tolower(trimws(quote))
+  quote_normalized <- gsub("[.,!?;:'\"()]", "", quote_normalized)
+  quote_words <- strsplit(quote_normalized, "\\s+")[[1]]
+
+  if (length(quote_words) < 3) return(NULL)
+
+  # Search for the first few words of the quote
+  search_words <- quote_words[1:min(6, length(quote_words))]
+
+  # Build word text array for searching
+  word_texts <- tolower(sapply(words, function(w) {
+    gsub("[.,!?;:'\"()]", "", w$text %||% "")
+  }))
+
+  # Sliding window search
+
+  for (i in seq_along(word_texts)) {
+    if (i + length(search_words) - 1 > length(word_texts)) break
+
+    # Check if this window matches
+    window <- word_texts[i:(i + length(search_words) - 1)]
+    if (all(window == search_words)) {
+      # Found it - return the timestamp of the first word
+      start_ms <- words[[i]]$start %||% 0
+      return(ms_to_timestamp(start_ms))
+    }
+  }
+
+  # Fallback: try partial match with first 4 words
+  if (length(quote_words) >= 4) {
+    search_words <- quote_words[1:4]
+    for (i in seq_along(word_texts)) {
+      if (i + 3 > length(word_texts)) break
+      window <- word_texts[i:(i + 3)]
+      if (all(window == search_words)) {
+        start_ms <- words[[i]]$start %||% 0
+        return(ms_to_timestamp(start_ms))
+      }
+    }
+  }
+
+  NULL
+}
+
 #' Create Claude API request builder
 #' @return httr2_request object
 claude_request <- function() {
@@ -242,6 +296,30 @@ analyze_episode <- function(episode_dir, episode_metadata, force = FALSE) {
 
   # Analyze
   analysis <- analyze_transcript(transcript_data, episode_metadata)
+
+  # Look up accurate quote timestamps from AssemblyAI word data
+  if (length(analysis$highlights) > 0) {
+    raw_path <- file.path(episode_dir, "assemblyai_raw.json")
+    if (file.exists(raw_path)) {
+      raw_transcript <- safe_read_json(raw_path)
+
+      for (i in seq_along(analysis$highlights)) {
+        quote <- analysis$highlights[[i]]$quote
+        if (!is.null(quote) && nchar(quote) > 20) {
+          accurate_timestamp <- find_quote_timestamp(quote, raw_transcript)
+          if (!is.null(accurate_timestamp)) {
+            analysis$highlights[[i]]$quote_timestamp <- accurate_timestamp
+            log_msg(
+              "INFO",
+              "Found accurate timestamp for quote {i}: {accurate_timestamp}"
+            )
+          } else {
+            log_msg("WARN", "Could not find timestamp for quote {i}")
+          }
+        }
+      }
+    }
+  }
 
   # Save
   save_analysis(analysis, episode_dir, episode_metadata)
