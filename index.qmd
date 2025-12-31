@@ -23,7 +23,7 @@ This site highlights content specifically related to:
 
 | Date | Episode | Healthcare Score |
 |------|---------|------------------|
-| 2025-12-20 | [Your Province. Your Premier. 12/20/2025 ](episodes/2025-12-20-your-province-your-premier-12202025.qmd) | 12% |
+| 2025-12-20 | [Your Province. Your Premier. 12/20/2025 ](episodes/2025-12-20-your-province-your-premier-12202025.qmd) | 8% |
 
 
 ---

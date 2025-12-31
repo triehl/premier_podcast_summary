@@ -79,7 +79,7 @@ CONFIG <- list(
   clip_buffer_before = 3, # seconds before highlight
   clip_buffer_after = 3, # seconds after highlight
   min_clip_duration = 10, # minimum clip length in seconds
-  max_clip_duration = 60, # maximum clip length in seconds
+  max_clip_duration = 90, # maximum clip length in seconds
 
   # File paths (relative to project root)
   data_dir = "data/episodes",

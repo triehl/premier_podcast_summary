@@ -1,14 +1,37 @@
 # Local Transcript Formatter for Premier Podcast Summary
 # Formats raw AssemblyAI transcription into clean, readable Markdown
-# (Replaced Claude API-based formatting for reliability and speed)
+# Uses Claude for intelligent section/topic detection
+
+# System prompt for section detection
+SECTION_DETECTION_PROMPT <- "You are analyzing a transcript from a radio call-in show 'Your Province. Your Premier.' with host Wayne Nelson and Premier Danielle Smith. Callers phone in to ask questions.
+
+Identify distinct sections where new topics or callers begin. Create a new section (topic title) when:
+1. The host introduces a new caller 
+2. The host reads a question received by email or text message
+3. A significantly different question or topic is raised
+4. The conversation shifts to a new subject
+5. The host asks a concluding question at the end of the show
+
+IMPORTANT: The start_time should be the timestamp when the HOST (Wayne Nelson) INTRODUCES the question or caller - NOT when the caller starts speaking.
+
+For each section provide a concise topic title (2-5 words) that describes the discussion.
+Topics should be specific, e.g.: 'Healthcare Wait Times', 'Pension Reform Question', 'Federal Carbon Tax', 'AISH Benefits Inquiry', 'Rural Policing Concerns'
+
+IMPORTANT: The new section (topic title) should appear BEFORE the question is asked. For example if the host says 'Lorraine is phoning in from Calgary with a victims of crime question. Go ahead, Lorraine.' the new section (topic title) should be before this question.
+
+CALLER: Hi, Premier. Thank you for all your work you’re doing for Alberta and the Albertans.', the new section header should be before this question.
+
+
+Return ONLY a JSON array, no other text or markdown:
+[
+  {\"start_time\": \"00:00\", \"title\": \"Opening\"},
+  {\"start_time\": \"MM:SS\", \"title\": \"Topic Title\"}
+]"
 
 # Configuration for transcript formatting
 TRANSCRIPT_CONFIG <- list(
   # Default label for unidentified callers (speaker mapping loaded dynamically)
   default_caller_label = "CALLER",
-
-  # Section break interval (milliseconds) - every 5 minutes
-  section_interval_ms = 5 * 60 * 1000,
 
   # Ad detection patterns (lowercase matching)
   ad_patterns = c(
@@ -29,7 +52,7 @@ TRANSCRIPT_CONFIG <- list(
   ),
 
   # Maximum time (ms) to scan for ads at beginning
-  max_ad_scan_ms = 60000,  # 60 seconds
+  max_ad_scan_ms = 60000, # 60 seconds
 
   # End-of-show patterns to detect closing ads/promos
   end_patterns = c(
@@ -68,7 +91,9 @@ map_speaker_name <- function(speaker_code, speaker_mapping = NULL) {
 #' @return TRUE if text matches ad patterns
 is_advertisement <- function(text) {
   text_lower <- tolower(text)
-  any(sapply(TRANSCRIPT_CONFIG$ad_patterns, function(p) grepl(p, text_lower, fixed = TRUE)))
+  any(sapply(TRANSCRIPT_CONFIG$ad_patterns, function(p) {
+    grepl(p, text_lower, fixed = TRUE)
+  }))
 }
 
 #' Check if text indicates start of actual show content
@@ -76,7 +101,9 @@ is_advertisement <- function(text) {
 #' @return TRUE if text matches show intro patterns
 is_show_intro <- function(text) {
   text_lower <- tolower(text)
-  any(sapply(TRANSCRIPT_CONFIG$show_intro_patterns, function(p) grepl(p, text_lower, fixed = TRUE)))
+  any(sapply(TRANSCRIPT_CONFIG$show_intro_patterns, function(p) {
+    grepl(p, text_lower, fixed = TRUE)
+  }))
 }
 
 #' Check if text appears to be end-of-show promotional content
@@ -84,21 +111,25 @@ is_show_intro <- function(text) {
 #' @return TRUE if text matches end patterns
 is_end_promo <- function(text) {
   text_lower <- tolower(text)
-  any(sapply(TRANSCRIPT_CONFIG$end_patterns, function(p) grepl(p, text_lower, fixed = TRUE)))
+  any(sapply(TRANSCRIPT_CONFIG$end_patterns, function(p) {
+    grepl(p, text_lower, fixed = TRUE)
+  }))
 }
 
 #' Find the index where actual show content begins
 #' @param utterances tibble of utterances
 #' @return Index of first non-ad utterance
 find_content_start <- function(utterances) {
-  if (nrow(utterances) == 0) return(1)
+  if (nrow(utterances) == 0) {
+    return(1)
+  }
 
   for (i in seq_len(nrow(utterances))) {
     u <- utterances[i, ]
 
     # Stop scanning after max time
     if (u$start_ms > TRANSCRIPT_CONFIG$max_ad_scan_ms) {
-      return(1)  # No clear ad section found, start from beginning
+      return(1) # No clear ad section found, start from beginning
     }
 
     # Check for show intro
@@ -133,7 +164,10 @@ trim_ad_from_intro <- function(text) {
     # Start from "welcome to your province"
     # Capitalize first letter properly
     result <- substr(text, match_pos, nchar(text))
-    return(paste0(toupper(substr(result, 1, 1)), substr(result, 2, nchar(result))))
+    return(paste0(
+      toupper(substr(result, 1, 1)),
+      substr(result, 2, nchar(result))
+    ))
   }
 
   # Fallback: look for other intro patterns
@@ -141,7 +175,10 @@ trim_ad_from_intro <- function(text) {
     match_pos <- regexpr(pattern, text_lower, fixed = TRUE)
     if (match_pos > 1) {
       result <- trimws(substr(text, match_pos, nchar(text)))
-      return(paste0(toupper(substr(result, 1, 1)), substr(result, 2, nchar(result))))
+      return(paste0(
+        toupper(substr(result, 1, 1)),
+        substr(result, 2, nchar(result))
+      ))
     }
   }
 
@@ -152,7 +189,9 @@ trim_ad_from_intro <- function(text) {
 #' @param utterances tibble of utterances
 #' @return tibble with merged utterances
 merge_consecutive_speakers <- function(utterances) {
-  if (nrow(utterances) == 0) return(utterances)
+  if (nrow(utterances) == 0) {
+    return(utterances)
+  }
 
   merged <- list()
   current <- list(
@@ -200,22 +239,157 @@ generate_section_title <- function(text, is_opening = FALSE) {
   # Look for topic keywords
   text_lower <- tolower(text)
 
-  if (grepl("pension|cpp|retirement", text_lower)) return("Pension Discussion")
-  if (grepl("police|rcmp|sheriff", text_lower)) return("Policing")
-  if (grepl("school|education|teacher|charter|private school", text_lower)) return("Education")
-  if (grepl("health|doctor|hospital|ahs|medical", text_lower)) return("Healthcare")
-  if (grepl("aish|disability|benefit", text_lower)) return("Disability Benefits")
-  if (grepl("tax|budget|deficit|spending", text_lower)) return("Fiscal Policy")
-  if (grepl("ottawa|federal|trudeau|constitution", text_lower)) return("Federal Relations")
-  if (grepl("oil|gas|energy|pipeline", text_lower)) return("Energy Sector")
-  if (grepl("alberta next|panel|referendum", text_lower)) return("Alberta Next Panel")
-  if (grepl("recall|petition|initiative", text_lower)) return("Citizen Initiatives")
-  if (grepl("crime|victim|justice", text_lower)) return("Justice")
-  if (grepl("youth|trades|employment|job", text_lower)) return("Employment")
-  if (grepl("immigration|newcomer", text_lower)) return("Immigration")
+  if (grepl("pension|cpp|retirement", text_lower)) {
+    return("Pension Discussion")
+  }
+  if (grepl("police|rcmp|sheriff", text_lower)) {
+    return("Policing")
+  }
+  if (grepl("school|education|teacher|charter|private school", text_lower)) {
+    return("Education")
+  }
+  if (grepl("health|doctor|hospital|ahs|medical", text_lower)) {
+    return("Healthcare")
+  }
+  if (grepl("aish|disability|benefit", text_lower)) {
+    return("Disability Benefits")
+  }
+  if (grepl("tax|budget|deficit|spending", text_lower)) {
+    return("Fiscal Policy")
+  }
+  if (grepl("ottawa|federal|trudeau|constitution", text_lower)) {
+    return("Federal Relations")
+  }
+  if (grepl("oil|gas|energy|pipeline", text_lower)) {
+    return("Energy Sector")
+  }
+  if (grepl("alberta next|panel|referendum", text_lower)) {
+    return("Alberta Next Panel")
+  }
+  if (grepl("recall|petition|initiative", text_lower)) {
+    return("Citizen Initiatives")
+  }
+  if (grepl("crime|victim|justice", text_lower)) {
+    return("Justice")
+  }
+  if (grepl("youth|trades|employment|job", text_lower)) {
+    return("Employment")
+  }
+  if (grepl("immigration|newcomer", text_lower)) {
+    return("Immigration")
+  }
 
   # Default
   "Discussion"
+}
+
+#' Parse sections JSON from Claude response
+#' @param json_text Raw JSON text from Claude
+#' @return List of sections with start_ms and title
+parse_sections_json <- function(json_text) {
+  # Clean up response - remove markdown code fences if present
+  clean_json <- json_text
+  if (grepl("^\\s*```", clean_json)) {
+    clean_json <- sub("^\\s*```(json)?\\s*\n?", "", clean_json)
+    clean_json <- sub("\\s*```\\s*$", "", clean_json)
+  }
+  clean_json <- trimws(clean_json)
+
+  # Parse JSON
+  sections_raw <- tryCatch(
+    {
+      jsonlite::fromJSON(clean_json, simplifyVector = FALSE)
+    },
+    error = function(e) {
+      log_msg("WARN", "Failed to parse sections JSON: {e$message}")
+      return(list(list(start_time = "00:00", title = "Opening")))
+    }
+  )
+
+  # Convert timestamps to milliseconds
+  sections <- purrr::map(sections_raw, function(s) {
+    # Parse MM:SS or HH:MM:SS timestamp
+    time_parts <- as.integer(strsplit(s$start_time, ":")[[1]])
+    if (length(time_parts) == 2) {
+      start_ms <- (time_parts[1] * 60 + time_parts[2]) * 1000
+    } else if (length(time_parts) == 3) {
+      start_ms <- (time_parts[1] * 3600 + time_parts[2] * 60 + time_parts[3]) *
+        1000
+    } else {
+      start_ms <- 0
+    }
+
+    list(
+      start_ms = start_ms,
+      title = s$title %||% "Discussion"
+    )
+  })
+
+  # Sort by start_ms
+  sections <- sections[order(sapply(sections, function(s) s$start_ms))]
+
+  sections
+}
+
+#' Detect transcript sections using Claude
+#' @param raw_transcript Raw AssemblyAI response
+#' @param speaker_mapping Speaker mapping from identify_speakers
+#' @return List of sections with start_ms and title
+detect_transcript_sections <- function(raw_transcript, speaker_mapping) {
+  # Build readable transcript for Claude
+  utterances <- extract_utterances(raw_transcript)
+
+  if (nrow(utterances) == 0) {
+    return(list(list(start_ms = 0, title = "Opening")))
+  }
+
+  # Format transcript with timestamps and speaker names for Claude
+  transcript_lines <- purrr::map_chr(seq_len(nrow(utterances)), function(i) {
+    u <- utterances[i, ]
+    speaker <- map_speaker_name(u$speaker, speaker_mapping)
+    timestamp <- ms_to_timestamp(u$start_ms)
+    sprintf("[%s] %s: %s", timestamp, speaker, u$text)
+  })
+  transcript_text <- paste(transcript_lines, collapse = "\n")
+
+  log_msg("INFO", "Sending transcript to Claude for section detection")
+
+  # Send to Claude for section detection
+  body <- list(
+    model = CONFIG$anthropic_model,
+    max_tokens = 4096,
+    system = SECTION_DETECTION_PROMPT,
+    messages = list(
+      list(role = "user", content = transcript_text)
+    )
+  )
+
+  response <- tryCatch(
+    {
+      claude_request() |>
+        httr2::req_body_json(body) |>
+        httr2::req_perform()
+    },
+    error = function(e) {
+      log_msg("WARN", "Claude section detection failed: {e$message}")
+      return(NULL)
+    }
+  )
+
+  if (is.null(response)) {
+    # Fallback to single "Opening" section
+    return(list(list(start_ms = 0, title = "Opening")))
+  }
+
+  # Parse response
+  result <- httr2::resp_body_json(response)
+  sections_json <- result$content[[1]]$text
+
+  sections <- parse_sections_json(sections_json)
+
+  log_msg("INFO", "Detected {length(sections)} sections in transcript")
+
+  sections
 }
 
 #' Format raw transcript into clean Markdown
@@ -223,13 +397,20 @@ generate_section_title <- function(text, is_opening = FALSE) {
 #' @param episode_metadata Episode metadata (title, pub_date, etc.)
 #' @param episode_dir Optional episode directory to load speaker mapping from
 #' @return Formatted transcript as markdown string
-format_transcript <- function(raw_transcript, episode_metadata, episode_dir = NULL) {
+format_transcript <- function(
+  raw_transcript,
+  episode_metadata,
+  episode_dir = NULL
+) {
   # Load speaker mapping if episode_dir provided
   speaker_mapping <- NULL
   if (!is.null(episode_dir)) {
     speaker_mapping <- load_speaker_mapping(episode_dir)
     if (!is.null(speaker_mapping)) {
-      log_msg("INFO", "Loaded speaker mapping with {length(speaker_mapping)} speakers")
+      log_msg(
+        "INFO",
+        "Loaded speaker mapping with {length(speaker_mapping)} speakers"
+      )
     }
   }
 
@@ -241,12 +422,18 @@ format_transcript <- function(raw_transcript, episode_metadata, episode_dir = NU
     return("")
   }
 
-  log_msg("INFO", "Formatting transcript locally ({nrow(utterances)} utterances)")
+  log_msg(
+    "INFO",
+    "Formatting transcript locally ({nrow(utterances)} utterances)"
+  )
 
   # Step 1: Find where actual content begins (skip ads)
   content_start_idx <- find_content_start(utterances)
   if (content_start_idx > 1) {
-    log_msg("INFO", "Skipping {content_start_idx - 1} ad utterances at beginning")
+    log_msg(
+      "INFO",
+      "Skipping {content_start_idx - 1} ad utterances at beginning"
+    )
     utterances <- utterances[content_start_idx:nrow(utterances), ]
   }
 
@@ -265,7 +452,7 @@ format_transcript <- function(raw_transcript, episode_metadata, episode_dir = NU
   # Step 1c: Remove end-of-show promotional content
   # Iteratively scan backward and remove promo content until we find actual show content
   if (nrow(utterances) > 0) {
-    max_iterations <- 20  # Prevent infinite loops
+    max_iterations <- 20 # Prevent infinite loops
     iteration <- 0
 
     while (nrow(utterances) > 0 && iteration < max_iterations) {
@@ -280,13 +467,17 @@ format_transcript <- function(raw_transcript, episode_metadata, episode_dir = NU
         # Look for show end markers
         for (marker in TRANSCRIPT_CONFIG$show_end_markers) {
           match_pos <- regexpr(marker, text_lower, fixed = TRUE)
-          if (match_pos > 0) {  # Found the marker
+          if (match_pos > 0) {
+            # Found the marker
             orig_count <- nrow(utterances)
 
             if (match_pos == 1) {
               # Marker at the very start - remove this utterance
               utterances <- utterances[1:(i - 1), ]
-              log_msg("INFO", "Removed end promo utterance {i} (marker at start)")
+              log_msg(
+                "INFO",
+                "Removed end promo utterance {i} (marker at start)"
+              )
             } else {
               # Marker in the middle - trim this utterance at the marker
               new_text <- trimws(substr(text, 1, match_pos - 1))
@@ -304,7 +495,10 @@ format_transcript <- function(raw_transcript, episode_metadata, episode_dir = NU
               } else {
                 # Text too short, remove this utterance
                 utterances <- utterances[1:(i - 1), ]
-                log_msg("INFO", "Removed end promo utterance {i} (remaining text too short)")
+                log_msg(
+                  "INFO",
+                  "Removed end promo utterance {i} (remaining text too short)"
+                )
               }
             }
             found_promo <- TRUE
@@ -323,27 +517,25 @@ format_transcript <- function(raw_transcript, episode_metadata, episode_dir = NU
   utterances <- merge_consecutive_speakers(utterances)
   log_msg("INFO", "After merging: {nrow(utterances)} utterances")
 
-  # Step 3: Build formatted output with section headers
+  # Step 3: Detect sections using Claude
+  sections <- detect_transcript_sections(raw_transcript, speaker_mapping)
+
+  # Step 4: Build formatted output with section headers
   lines <- character()
-  section_interval <- TRANSCRIPT_CONFIG$section_interval_ms
-  last_section_time <- -section_interval  # Force first section header
-  is_first_section <- TRUE
+  section_idx <- 1
 
   for (i in seq_len(nrow(utterances))) {
     u <- utterances[i, ]
 
-    # Check if we need a new section header
-    if (u$start_ms - last_section_time >= section_interval) {
-      # Get some context for section title (this utterance + next few)
-      context_end <- min(i + 2, nrow(utterances))
-      context_text <- paste(utterances$text[i:context_end], collapse = " ")
-      section_title <- generate_section_title(context_text, is_first_section)
-
-      timestamp <- ms_to_timestamp(u$start_ms)
-      lines <- c(lines, sprintf("\n## [%s] %s\n", timestamp, section_title))
-
-      last_section_time <- u$start_ms
-      is_first_section <- FALSE
+    # Check if we've reached the next section boundary
+    while (
+      section_idx <= length(sections) &&
+        u$start_ms >= sections[[section_idx]]$start_ms
+    ) {
+      section <- sections[[section_idx]]
+      timestamp <- ms_to_timestamp(section$start_ms)
+      lines <- c(lines, sprintf("\n## [%s] %s\n", timestamp, section$title))
+      section_idx <- section_idx + 1
     }
 
     # Format the utterance
@@ -363,9 +555,9 @@ format_transcript <- function(raw_transcript, episode_metadata, episode_dir = NU
 #' @param episode_metadata Episode metadata
 #' @return Path to saved file
 save_formatted_transcript <- function(
-    transcript_md,
-    episode_dir,
-    episode_metadata
+  transcript_md,
+  episode_dir,
+  episode_metadata
 ) {
   # Save markdown file
   md_path <- file.path(episode_dir, "transcript.md")
@@ -378,7 +570,7 @@ save_formatted_transcript <- function(
     episode_title = episode_metadata$title,
     episode_date = format(episode_metadata$pub_date, "%Y-%m-%d"),
     formatted_at = format(Sys.time(), "%Y-%m-%dT%H:%M:%S"),
-    formatter = "local",  # Changed from "claude" to "local"
+    formatter = "local", # Changed from "claude" to "local"
     transcript_markdown = transcript_md
   )
 
@@ -394,9 +586,9 @@ save_formatted_transcript <- function(
 #' @param force Re-format even if already exists
 #' @return Path to formatted transcript
 format_episode_transcript <- function(
-    episode_dir,
-    episode_metadata,
-    force = FALSE
+  episode_dir,
+  episode_metadata,
+  force = FALSE
 ) {
   # Check for existing formatted transcript
   md_path <- file.path(episode_dir, "transcript.md")
@@ -415,7 +607,11 @@ format_episode_transcript <- function(
 
   # Format locally (no Claude API call)
   # Pass episode_dir to load speaker mapping
-  formatted_md <- format_transcript(raw_transcript, episode_metadata, episode_dir)
+  formatted_md <- format_transcript(
+    raw_transcript,
+    episode_metadata,
+    episode_dir
+  )
 
   # Save
   save_formatted_transcript(formatted_md, episode_dir, episode_metadata)

@@ -582,6 +582,35 @@ process_single_episode <- function(episode_number = 1, force = FALSE) {
 
 #----------------------------------------------------------------------------
 
+# For each folder in data/episodes delete all the files except episode.mp3, assemblyai_raw.json, speaker_mapping.json
+clean_episode_folders <- function() {
+  data_dir <- file.path(get_project_root(), CONFIG$data_dir)
+  episode_dirs <- dir_ls(data_dir, type = "directory")
+  for (episode_dir in episode_dirs) {
+    # Delete files except the ones to keep
+    files <- dir_ls(episode_dir, type = "file")
+    files_to_delete <- files[
+      !path_file(files) %in%
+        c(
+          "episode.mp3",
+          "assemblyai_raw.json",
+          "speaker_mapping.json"
+        )
+    ]
+    file_delete(files_to_delete)
+
+    # Delete clips subfolder if it exists
+    clips_dir <- file.path(episode_dir, "clips")
+    if (dir_exists(clips_dir)) {
+      dir_delete(clips_dir)
+    }
+
+    cli_alert_info("Cleaned {episode_dir}")
+  }
+}
+
+clean_episode_folders()
+
 run_pipeline(1, force_reprocess = TRUE, skip_render = FALSE)
 
 
