@@ -29,25 +29,29 @@ ANALYZER_SYSTEM_PROMPT <- "You are an expert podcast content analyst specializin
 ## Your Task
 Analyze the provided transcript and identify all content related to:
 - Physicians and doctors
-- Healthcare system and health policy
+- Healthcare system and health policy particularily if it references physicians or doctors
 - Hospitals, clinics, and healthcare facilities
 - Alberta Health Services (AHS)
-- Medical services, access, and wait times
-- Healthcare funding and reform particularily that relate to physicians
-- Patient care and outcomes
+- Covenant Health
+- Chartered Surgical Facilities
+- Medical services, access, and wait times particularily if it references physicians or doctors
+- Healthcare funding and reform particularily if it references physicians or doctors
 - Emergency services and ambulance
 - Primary care and family medicine
+
+Ignore content related to federal benefits.
 
 ## Analysis Requirements
 For each healthcare-related segment you identify:
 1. Provide the timestamp range [MM:SS - MM:SS]
 2. Write a concise summary (1-2 sentences)
 3. Extract a notable direct quote if available (use exact words from transcript)
-4. Assign a relevance score: High, Medium, or Low
+4. Provide the exact timestamp when the quote begins (quote_timestamp)
+5. Assign a relevance score: High, Medium, or Low
    - High: Direct policy announcements, specific healthcare initiatives, detailed discussion
    - Medium: General healthcare mentions, context for healthcare topics
    - Low: Brief or tangential healthcare references
-5. List the specific healthcare topics covered
+6. List the specific healthcare topics covered
 
 ## Output Format
 You must output valid JSON with this exact structure:
@@ -60,6 +64,7 @@ You must output valid JSON with this exact structure:
     {
       \"timestamp_start\": \"05:30\",
       \"timestamp_end\": \"08:45\",
+      \"quote_timestamp\": \"06:15\",
       \"summary\": \"Premier discusses new physician recruitment initiative for rural Alberta\",
       \"quote\": \"We are committed to bringing 500 new family doctors to underserved communities over the next three years.\",
       \"relevance\": \"High\",
@@ -74,6 +79,7 @@ You must output valid JSON with this exact structure:
 - healthcare_focus_score is 0-100 representing percentage of episode discussing healthcare
 - Include ALL healthcare-related segments, even brief mentions (with Low relevance)
 - Quotes must be exact text from the transcript
+- quote_timestamp must be the EXACT timestamp when the quote begins in the transcript (used for audio clips)
 - If no healthcare content is found, return empty highlights array with score 0"
 
 #' Analyze transcript for healthcare content

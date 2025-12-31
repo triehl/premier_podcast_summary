@@ -8,19 +8,21 @@ date: 2025-12-20
 ---
 
 
-## [00:00] Opening
+## [00:21] Opening
 
 **WAYNE NELSON:** Welcome to your province, you, Premier heard on QR Calgary and in Edmonton on 880 Chad. I'm Wayne Nelson, your host and moderator and this is your final opportunity this year to speak with the premier directly to ask your questions, to voice your concerns. Whatever's on your mind, please keep those questions or texts as short as possible. Premier Smith, welcome back to the show.
-
-## [00:57] Alberta Next Panel Report
 
 **PREMIER DANIELLE SMITH:** Oh, hi Wayne. I guess this is our Last 1 of 2025.
 
 **WAYNE NELSON:** It is indeed. And now two developments could shape Alberta politics in 2026 yesterday's release of the Alberta Next panel's final report, and the growing wave of citizen petitions. So let's start with the panel. It recommends referendums on provincial control over immigration and unconstitutional reforms, including some shielding of provincial powers, potential judicial appointment reforms, and even abolishing the federal Senate. It also calls for continued work on a provincial police service and detailed planning for an Alberta pension plan before any vote takes place. However, public polling suggests a lot of Albertans are more focused on those bread and butter issues. Housing affordability, classroom overcrowding, health care. How do you reconcile that focus with the panel recommendations?
 
+## [01:41] Alberta Next Panel Report
+
 **PREMIER DANIELLE SMITH:** Well, you can do it all. I mean, when you're in government, we have 24 departments and each one of them has their priorities. And so we are focused on those on a daily basis and during our sessions. However, these big conversations about our evolving relationship with Ottawa has been very much in the backdrop for probably 30 years. That's how long I've been following this. And there have been various consultations that have shown increasing support for us to develop more aspects of what's called responsible government. The bigger you get, the more money you have, the more population you have, the more things you should do on your own. So that was the so I think we can look at them as two different things where one is sort of establishing a new relationship with Ottawa. And yet we still annual basis issue our budget, deal with affordability measures. We have to take care of health care, education, vulnerable programs. It's in all of the above.
 
 **WAYNE NELSON:** All right, I'm sure we'll get some more questions on that throughout the show. Some critics say that yesterday's release, which is the Friday before Christmas, instead of the originally announced December 31st date, looks to them like burying the report instead of inviting debate. What do you say to that?
+
+## [02:59] Report Release Timing
 
 **PREMIER DANIELLE SMITH:** Well, here we are talking about it. I don't want to bury it. I mean, I think the debate has happened. We had 22,000 people issue comments. We had 8,800,000 people watch the various panels online. We went to 10 different communities, had 5,000 people participate in person and many others who participated in the survey. So I would say it's a very high level of engagement. People have been waiting for it and now they see what it is that the panel is recommending. We will come back as a caucus and cabinet looking at the recommendations and seeing which ones we'll proceed on and which ones might go to a referendum of the people.
 
@@ -32,13 +34,13 @@ date: 2025-12-20
 
 **WAYNE NELSON:** We had a number of text messages on our last show that I wasn't able to get to simply because of time and the number of texts and phone calls that we deal with regularly. Regarding the private school funding petition, it seeks a referendum on ending public funding to private schools or independent schools, about 70% of student public funding while serving around 6% of the students. Now, supporters say that redirecting those taxpayer dollars Back into the public school system would help address some of the overcrowding and chronic staffing shortages that were identified during the recent teachers strike. Opponents say that removing the funding from private schools could destabilize education choice options and hurt families using those schools. So does your government have a position then, premier Smith, on whether public funds should prioritize the public system over private schools?
 
-## [05:36] Private School Funding
+## [05:25] Private School Funding
 
 **PREMIER DANIELLE SMITH:** Well, I look at it differently. We've got about 100,000 students who go to either a homeschooling or a charter school or an independent school. And if you tried to take all of those hundred thousand students and put them into our existing public school system, it would collapse the system. There just isn't space for them. So I would say we look at that. We're kind of grateful to parents that they're willing to pay a portion of the cost of their kids education. It saves taxpayer money. For every child who is in a charter school, they're about equivalent. They're not allowed to charge tuition. But for every child who's in an independent school, US at least $5,000 per child and for every child who's homeschooled, they only get $850. That saves us almost $12,000 per child. So that's the way people should look at it is that these are tax paying parents that are not only willing to pay their fair share of taxes to support everybody else's education, but they're also willing to take on the cost of their own kids education. And if all of those kids were in the public system being paid at the same level that every other child in the public system is being paid at, that would cost taxpayers an additional $500 million. So it a little bit differently. I think that the, the fact that we do have parents that want choice and are willing to support choice with their own dollars, I think that we should be grateful to them.
 
 **WAYNE NELSON:** All right, let's get to the phone and text lines. And here we have that. That old question that comes up at least once a show. Teresa is calling from Edmonton on. She wants some clarification on the ADAP situation. Go ahead, Theresa, you're on with the premiere.
 
-## [07:10] AISH Federal Benefits
+## [07:10] AISH Benefits Clarification
 
 **CALLER:** Oh, my goodness. I can't believe I can actually ask the question to the premier.
 
@@ -58,7 +60,7 @@ date: 2025-12-20
 
 **WAYNE NELSON:** All right. We've got lots of texts, some great questions by the way, on the text line, both on the QR line and on the chat line. I'm going to try to get to as many as we can. But right now we're going to pause for a break. More of those calls and texts when we return on your province, your premier, If you're just joining us today, you are listening to your province, your premier herds for the most part every other Saturday morning for listeners throughout Elk Alberta, in Edmonton on 880 Chad right here in Calgary on QR Calgary. All right, we're going to go right to the phones because we want to get some further clarification. And this is on our first caller talking about Ace. Jerry from Westlock, go ahead. You are on to the premier with your Ace question.
 
-## [10:54] AISH Application Barriers
+## [10:54] AISH Application Concerns
 
 **CALLER:** Good morning Premier. Hey Jerry, how are you this morning?
 
@@ -98,7 +100,7 @@ date: 2025-12-20
 
 **PREMIER DANIELLE SMITH:** Well, yeah, and we're asking the business community to help us with that. One of the things that we kept seeing is a very high youth unemployment rate. It was as high as 20%. It's now thankfully down to 13.5%. And so we created this youth unemployment initiative where we as the government will subsidize an employer who's willing to give a kid a chance, will pay $10 an hour for their first 400. Then they can get exposed to what it's like to work on a shop floor, what it's like to manage equipment, what it's like to be a laborer. They can work with people who are in the trades. We can't do this ourselves. I mean, you have to remember part of the issue we're facing is that if you've got a child who grows up in a household where parents and all the adults in his life go and do an office job and don't do a trades job, then they go to school and they are in a school where there aren't trades exposure. How are they supposed to know what they don't know? They don't know that there's three or four hundred different professions out there. So we're asking employers to help us out on this one. There's a wonderful program in Airdrie McKee homes and what they do is they've set up a classroom on site so that two teachers come out and teach the academic courses and then the kids build homes in the afternoon and then there's a switch. The kids who are building homes then go on the academic courses and then the other cohort goes and builds homes in the afternoon. That was just the initiative of a business owner who worked with their local Rocky View school board to make that happen. So we are more than happy to enable those kinds of things, but we do need to have willing employers who are willing to work with us to take that risk. As we know, anyone who's starting off brand new in a job, they're not going to be perfect at it. There's going to be a lot of training, there's going to be a lot of safety that has to be learned. But it is going to be a collective effort. So we're doing that. We're also doing dual credit. Every time I speak to the Alberta School Boards Association, I challenge them to set up specialty schools. We've got an aviation academy down in Medicine Hat. We've got two agriculture schools also down in my riding end area. And we've got a wonderful program that is up in the Lacrete area that I think exposes kids with a virtual learning device so they can sit into it and they can manage Earth movers and all of that. I think they can get exposed up to 30 different professions up there. So yeah, we're doing all of that. But I do think it's going to be up to the business community to partner with us. We got to take a chance on these kids to expose them to the kind of incredible opportunities there are.
 
-## [21:19] Game Ranching Decision
+## [21:19] Game Ranching Policy
 
 **WAYNE NELSON:** Alright, I want to go to the text line and this one is on the Chad line from Mavis Now Mavis has a lot of critiques, but I wanted to focus on part of her text because it's fairly long. I'm not going to read the whole thing. She says people are not happy with the way you are railroading things. Your government figures we need to have. We do not need an extra police service. We do need extra help with the ones we got. This is in response to the Alberta Next panel report that says you will be moving ahead with the policing with the individual community policing.
 
@@ -126,7 +128,7 @@ date: 2025-12-20
 
 **WAYNE NELSON:** Peter is calling in from Red Deer with a question about charter school programs. Go ahead, Peter. You're on with the premier.
 
-## [29:29] Charter School Education
+## [29:29] Charter School Information
 
 **CALLER:** Well, thank you for taking my call. Where it's coming from is I'm a huge fan of charter and private schools and I have a little apprehension, you know, If a referendum is held that the public wouldn't have enough information, is there any way that we could have some sort of, for lack of a better word, an education program, little sound bites of things that charter schools do. Like did you know an example? Did you know that private schools have their own busing systems? That could be just one, but there might be a thousand little songbites.
 
@@ -136,21 +138,21 @@ date: 2025-12-20
 
 **PREMIER DANIELLE SMITH:** Well, thanks for that, Peter. I would say there's sort of two different things that we're talking about there. So charter schools are public schools. It's just instead of being sponsored by a school board, they're sponsored directly by the minister of education. So they don't have to go through an intermediary to get their per student funding. They get it directly from the province. They're not allowed to charge tuition. They're just not attached to a particular school board. So we'll park that one for a minute because you're right, there are some really great charter schools out there. Independent schools are ones that can charge a tuition and a couple come to mind that are really unique. Like Renfrew School in Calgary. It is one that deals with learning disabilities and it is an extraordinary program. So much so that we look to that as a way of seeing are there things that we're doing that we should replicate in the publicly funded system. Same thing. I think there's a new autistic school that has started up in Edmonton, an independent school that I'm quite interested to see if they have any techniques for kids who are on the spectrum to see that we can bring them into the public system. But part of what happens with independent schools is that the parents see that there isn't quite a match for their unique needs of their kids in the public school available. And so they want to have another option option. And if it does get to a point where they have a number of signatures that allow for a referendum campaign, I suspect there'll be a yes side and a no side and there'll be lots of sound bites and lots of advertising and lots of third parties who are participating in that. So that Albertans are fully aware, as you can tell. I mean, this is our policy. So we're supportive of continuing to support parents in the choice that they have, especially since it saves taxpayers and it also allows for us to have unique programs that we ultimately can learn from that everybody can benefit from.
 
-## [32:23] Private School Tax Question
-
 **WAYNE NELSON:** On that note, a texter, Laurel says let's be realistic. Premier Smith, 100,000 people in other types of education are not going to come in to public education. Those parents are going to happily pay 100% of the cost for their private school at Weber Academy.
+
+## [32:40] Private School Tax Debate
 
 **PREMIER DANIELLE SMITH:** Well, I guess I have to ask then, why would that person think that that that person should pay 100% of their child's cost and 100% of their neighbor's child's cost? That seems a little bit unusual. It seems to me that these taxpayers are willing to not only pay their fair share of taxes which help to subsidize the system, but then also take on a portion of the cost personally so that their own children can get educated. I just see it a little bit differently. I think that the fact that you've got kids who are in these programs and again, some of these programs are just not offered in the public education system like the two I just described. I sure wouldn't want to see those shut down.
 
-## [33:21] Senior School Taxes
-
 **WAYNE NELSON:** And that dovetails nicely into this question from Carol on our text line. She said, our concern is that as retired seniors, why are we still having to pay school taxes? We are happy and appreciate those parents who are paying into their kids education. Can you do something about parents of school children paying school taxes rather than.
+
+## [33:41] Senior School Tax
 
 **PREMIER DANIELLE SMITH:** Every well, everybody's got to pay for the future generation. It's that future generation that gets out and has a good paying job that pays for all of the programs that we care for that we that we need, including income supports for CPP and OAS and gis. So I guess it's a philosophical difference, but I do think that everybody needs to pay collectively for the benefit of the next generation. That's part of how we structured our tax system. There are programs in place where you can get a freeze on education, property tax if you're in a position where it's a hardship for you. But generally speaking, I think we should all be supportive of young people getting educated to the best that we can do for them.
 
 **WAYNE NELSON:** Lots of phone calls today, lots of text messages on a variety of topics. We're going to pause for an early break and come back. You are listening to your province, your premiere, Wayne Nelson, back with you on your province, your premier, your opportunity to speak Premier Danielle Smith, one on one. If you've got that specific question you'd like answered, please phone or text. And if you don't know those numbers by now, here they are once Again in Calgary, 403-974-8255. In Edmonton. What is our number in Edmonton? It is an 880 number and I've made misplaced that number. But our Edmonton phone callers know that number and they are phoning in. Let's go to John in Calgary right off the bat. John, go ahead. You're on with the premier.
 
-## [35:18] Wildrose Party Policies
+## [35:18] Wildrose Policy Continuity
 
 **CALLER:** Thank you for taking my call. Hey John, my question is about the Wild Rose program. Your government seems to be following along that program of the Wild Rose party. I just want to comment about your comment about how locked in to the Wild Rose program your government is using right now.
 
@@ -166,13 +168,13 @@ date: 2025-12-20
 
 **WAYNE NELSON:** Discussions or should we be getting the same, same treatment that Quebec was getting?
 
-## [37:56] Quebec Equalization Frustration
+## [37:56] Quebec Treatment Comparison
 
 **PREMIER DANIELLE SMITH:** I can tell you how frustrating it is that we're running a deficit and we're going to run a deficit next year because of an out of control approach that the federal government took largely on newcomers. We were accustomed to getting. We're finally back to 380,000 to 450,000 under this new Prime Minister. But for a few years there, there were no limits on any of the programs, no limits on refugees, no limits on international students, no limits on the temporary foreign. 2 million people a year came into the country. So we are under pressure. And so meanwhile we look at how much we transfer to Ottawa versus what we get back in benefits and they get $26 billion more from Alberta taxpayers than we receive back. And then Quebec gets a $13.9 billion transfer on equalization and we get zero and Manitoba gets 5 billion. And people are very frustrated because we work hard, we know we pay our taxes, but then to also run deficits because there isn't a fair amount of those dollars coming back. Yeah, I think that causes a lot of frustration.
 
 **WAYNE NELSON:** Randy has texted in. He said, please ask Premier Smith when we will get a response from the Feds onto Alberta's share of the cpp.
 
-## [39:08] CPP Share Response
+## [39:08] CPP Response Timeline
 
 **PREMIER DANIELLE SMITH:** I just had a conversation with the Prime Minister about that yesterday. I wanted to give him a heads up that this Alberta Next panel was coming and that there's a few things that I would hope that we could work together on. For instance, the appointment of justice judges to the King's bench in the Court of Appeal. The panel recommended that we have a referendum on abolishing the Senate. I think we've tried out west to reform it for decades and gotten nowhere. So I just wanted to let him know that that was coming as well. But the issue around the pension, I said the law says that pensions are provincial responsibility and that we've chosen to be part of the national plan. But we can choose to. We have the authority to be able to choose to opt out, but their actuary won't us a firm number. So I did let them know that we should at least know what that number is so that Albertans know what the benefit level is and contribution level is. If there was an independent plan, we also need to know what our liability is and what the asset value would be. So we've started that conversation with the prime minister and we'll continue it. But what I took from the panel is there can be no referendum until those things are settled. No one's going to vote unless they know what those parameters are. So I'll work very hard to get those parameters. Haven't been able to get them so far. But we've got a new prime minister so we'll see if I can get some them from him now that this report is out.
 
@@ -210,9 +212,9 @@ date: 2025-12-20
 
 **PREMIER DANIELLE SMITH:** Yeah, thanks for that. I'm watching that with great interest to see how it is being implemented. I think one of the issues, and it's being driven out of Quebec. I think in Quebec, they're very concerned that some of the newcomer populations are not integrated into their secular way of managing their province, as you saw. I mean, they remove religious symbols. You're not allowed to wear religious garments if you work in public service. So they are doing it under the auspices of maintaining their Quebec secular culture and language. And so that's what they felt they needed some additional tools for because there has been a lot of conflict in Quebec society in recent years. I don't, I don't think it's intended to go after pastors reading scripture from a pulpit. But you know what? This is the unpredictable thing that happens when politicians pass laws. Then they turn it over to the courts and the prosecutors and the police to interpret. And sometimes it can be interpreted in an unexpected way. So I'm talking with Mickey Amory, my justice minister, to see if there are any guardrails we need to put down. As you saw, we just recently created policy on our policing priorities which incidentally do not include include going after law abiding gun owners on the gun grab, nor does it include going after those who defend themselves against an intruder. So we've given direction. That's not a policing priority or a prosecution priority. We may have to add to the list going after pastors. Reading the bible is also not a priority when it comes to policing these crimes. I think what we're trying to get at is if you are saying something that puts another group at risk because of your words. That was always what a hate crime was supposed to be, not religious texts. So I think they've gone a step too far. We'll have to see what we can do about that though.
 
-## [45:05] Closing Remarks
-
 **WAYNE NELSON:** Final question, Premier Smith. What's one concrete improvement you'd like to see in Albertans lives by the end of 2026?
+
+## [45:13] 2026 Healthcare Goals
 
 **PREMIER DANIELLE SMITH:** Oh, so much on healthcare. I wish I could say just one, but it's what I'm looking forward to. Seeing people get attached to a family doctor or nurse practitioner, improving the patient experience to get into surgery, clearing the surgical background backlog. Those are the things that we're working really hard on next year and we're finally at the point where we finished all of our restructuring and so now we get to implement and I'm looking forward to really greatly improving the patient experience.
 

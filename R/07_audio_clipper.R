@@ -154,9 +154,14 @@ log_msg("INFO", "Extracting {length(highlights)} clips from episode")
 results <- purrr::map_dfr(seq_along(highlights), function(i) {
   h <- highlights[[i]]
 
-  # Parse timestamps
+  # Parse timestamps - prefer quote_timestamp for clip start if available
   start_seconds <- tryCatch({
-    timestamp_to_seconds(h$timestamp_start)
+    # Use quote_timestamp if available (exact moment of the quote)
+    if (!is.null(h$quote_timestamp) && nchar(h$quote_timestamp) > 0) {
+      timestamp_to_seconds(h$quote_timestamp)
+    } else {
+      timestamp_to_seconds(h$timestamp_start)
+    }
   }, error = function(e) {
     log_msg("WARN", "Invalid start timestamp: {h$timestamp_start}")
     NA_real_
