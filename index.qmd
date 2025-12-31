@@ -9,11 +9,11 @@ toc: false
 
 # Episodes
 
-| Date | Episode | Healthcare Score |
-|------|---------|------------------|
-| 2025-12-20 | [Your Province. Your Premier. 12/20/2025 ](episodes/2025-12-20-your-province-your-premier-12202025.qmd) | 15% |
-| 2025-12-06 | [Your Province. Your Premier. 12/06/2025](episodes/2025-12-06-your-province-your-premier-12062025.qmd) | 25% |
-| 2025-11-22 | [Your Province. Your Premier. 11/22/2025 ](episodes/2025-11-22-your-province-your-premier-11222025.qmd) | 35% |
-| 2025-11-08 | [Your Province. Your Premier. 11/08/2025](episodes/2025-11-08-your-province-your-premier-11082025.qmd) | 35% |
-| 2025-10-25 | [Your Province. Your Premier 10/25/2025 ](episodes/2025-10-25-your-province-your-premier-10252025.qmd) | 8% |
+| Date | Episode | Healthcare content |
+|------|---------|--------------------|
+| 2025-12-20 | [Your Province. Your Premier. 12/20/2025 ](episodes/2025-12-20-your-province-your-premier-12202025.qmd) | ⚫⚫⚪ |
+| 2025-12-06 | [Your Province. Your Premier. 12/06/2025](episodes/2025-12-06-your-province-your-premier-12062025.qmd) | ⚫⚫⚫ |
+| 2025-11-22 | [Your Province. Your Premier. 11/22/2025 ](episodes/2025-11-22-your-province-your-premier-11222025.qmd) | ⚫⚫⚫ |
+| 2025-11-08 | [Your Province. Your Premier. 11/08/2025](episodes/2025-11-08-your-province-your-premier-11082025.qmd) | ⚫⚫⚫ |
+| 2025-10-25 | [Your Province. Your Premier 10/25/2025 ](episodes/2025-10-25-your-province-your-premier-10252025.qmd) | ⚫⚪⚪ |
 

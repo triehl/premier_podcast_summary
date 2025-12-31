@@ -36,7 +36,7 @@ title: "%s"
   content <- character()
 
   # Overall summary section
-  content <- c(content, "## Episode Overview\n")
+  content <- c(content, "# Episode Overview\n")
   content <- c(content, sprintf("**Air Date:** %s\n\n", date_display))
 
   if (
@@ -57,7 +57,7 @@ title: "%s"
   }
 
   # Healthcare highlights section
-  content <- c(content, "## Healthcare Highlights\n\n")
+  content <- c(content, "# Healthcare Highlights\n\n")
 
   if (!is.null(analysis$highlights) && length(analysis$highlights) > 0) {
     # Group by relevance
@@ -71,7 +71,7 @@ title: "%s"
     )
 
     if (length(high_highlights) > 0) {
-      content <- c(content, "### Key Points\n\n")
+      #content <- c(content, "### Key Points\n\n")
       for (h in high_highlights) {
         content <- c(
           content,
@@ -86,7 +86,7 @@ title: "%s"
     }
 
     if (length(medium_highlights) > 0) {
-      content <- c(content, "### Additional Mentions\n\n")
+      #content <- c(content, "### Additional Mentions\n\n")
       for (h in medium_highlights) {
         content <- c(
           content,
@@ -111,7 +111,7 @@ title: "%s"
   content <- c(
     content,
     sprintf(
-      "\n## Full Transcript\n\n[View the complete transcript](%s.qmd)\n",
+      "\n# Full Transcript\n\n[View the complete transcript](%s.qmd)\n",
       transcript_slug
     )
   )
@@ -152,6 +152,12 @@ format_highlight_block <- function(
 ) {
   lines <- character()
 
+  # Topics
+  if (!is.null(h$topics) && length(h$topics) > 0) {
+    topics_str <- paste(h$topics, collapse = ", ")
+    lines <- c(lines, sprintf("## Topics: %s\n\n", topics_str))
+  }
+
   # Timestamp and summary
   lines <- c(
     lines,
@@ -166,12 +172,6 @@ format_highlight_block <- function(
   # Quote if available
   if (!is.null(h$quote) && nchar(h$quote) > 0) {
     lines <- c(lines, sprintf("> \"%s\"\n\n", h$quote))
-  }
-
-  # Topics
-  if (!is.null(h$topics) && length(h$topics) > 0) {
-    topics_str <- paste(h$topics, collapse = ", ")
-    lines <- c(lines, sprintf("*Topics: %s*\n\n", topics_str))
   }
 
   # Audio clip if available
@@ -377,8 +377,8 @@ toc: false
     )))
 
   if (nrow(processed_episodes) > 0) {
-    content <- c(content, "| Date | Episode | Healthcare Score |\n")
-    content <- c(content, "|------|---------|------------------|\n")
+    content <- c(content, "| Date | Episode | Healthcare content |\n")
+    content <- c(content, "|------|---------|--------------------|\n")
 
     for (i in seq_len(nrow(processed_episodes))) {
       ep <- processed_episodes[i, ]
@@ -394,7 +394,18 @@ toc: false
       score <- if (file.exists(analysis_path)) {
         analysis <- safe_read_json(analysis_path)
         if (!is.null(analysis$healthcare_focus_score)) {
-          sprintf("%d%%", as.integer(analysis$healthcare_focus_score))
+          score_num <- as.numeric(gsub(
+            "%",
+            "",
+            analysis$healthcare_focus_score
+          ))
+          if (score_num <= 10) {
+            "\u26ab\u26aa\u26aa"
+          } else if (score_num <= 20) {
+            "\u26ab\u26ab\u26aa"
+          } else {
+            "\u26ab\u26ab\u26ab"
+          }
         } else {
           "—"
         }
