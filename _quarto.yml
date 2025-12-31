@@ -1,36 +1,29 @@
 project:
-  type: book
-  output-dir: _book
+  type: website
   resources:
     - "data/episodes/*/clips/*.mp3"
 
-book:
-  title: "Your Province. Your Premier."
-  subtitle: "Healthcare Content Analysis"
+website:
+  title: "Radio show: Your Province. Your Premier."
   description: |
     Analysis of healthcare-related content from Alberta Premier Danielle Smith
-    podcast "Your Province. Your Premier." featuring host Wayne Nelson.
-  author: "Automated Analysis"
-  date: today
-  date-format: "MMMM D, YYYY"
+    on the "Your Province. Your Premier." radio show.
 
   sidebar:
     style: floating
     search: true
-
-  chapters:
-    - index.qmd
-    - part: "Episodes"
-      chapters:
+    contents:
+      - index.qmd
+      - section: "Episodes"
+        content:
       - episodes/2025-12-20-your-province-your-premier-12202025.qmd
       - episodes/2025-12-20-your-province-your-premier-12202025_transcript.qmd
-    - about.qmd
+      - about.qmd
 
 format:
   html:
     theme:
       light: cosmo
-      dark: darkly
     css: styles.css
     toc: true
     toc-depth: 2

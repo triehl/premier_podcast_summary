@@ -54,15 +54,14 @@ upload_url
 
 #' Submit transcription job with speaker diarization
 #' @param audio_url URL of uploaded audio (from upload_audio)
-#' @param speakers_expected Expected number of speakers
 #' @return Transcript ID for polling
-submit_transcription <- function(audio_url, speakers_expected = CONFIG$speakers_expected) {
-log_msg("INFO", "Submitting transcription job with {speakers_expected} expected speakers")
+submit_transcription <- function(audio_url) {
+log_msg("INFO", "Submitting transcription job with auto speaker detection")
 
 body <- list(
   audio_url = audio_url,
-  speaker_labels = TRUE,
-  speakers_expected = speakers_expected
+  speaker_labels = TRUE
+  # speakers_expected removed - let AssemblyAI auto-detect (up to 10 speakers)
 )
 
 response <- assemblyai_request("/transcript") |>

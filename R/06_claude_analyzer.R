@@ -1,6 +1,26 @@
 # Claude Healthcare Content Analyzer for Premier Podcast Summary
 # Uses Claude API to identify healthcare-related content in transcripts
 
+#' Create Claude API request builder
+#' @return httr2_request object
+claude_request <- function() {
+  api_key <- get_env_var("ANTHROPIC_API_KEY")
+
+  httr2::request(paste0(CONFIG$anthropic_base_url, "/messages")) |>
+    httr2::req_headers(
+      `x-api-key` = api_key,
+      `anthropic-version` = CONFIG$anthropic_version,
+      `content-type` = "application/json"
+    ) |>
+    httr2::req_throttle(rate = CONFIG$anthropic_rate_limit / 60) |>
+    httr2::req_retry(
+      max_tries = 3,
+      backoff = ~2^.x,
+      is_transient = \(resp) httr2::resp_status(resp) %in% c(429, 500, 502, 503, 529)
+    ) |>
+    httr2::req_timeout(300)
+}
+
 # System prompt for healthcare content analysis
 ANALYZER_SYSTEM_PROMPT <- "You are an expert podcast content analyst specializing in healthcare policy. You are analyzing transcripts from 'Your Province. Your Premier.' - a podcast featuring Alberta Premier Danielle Smith discussing provincial issues.
 

@@ -15,7 +15,7 @@ CONFIG <- list(
   # Claude settings
   anthropic_model = "claude-sonnet-4-5-20250929",
   anthropic_version = "2023-06-01",
-  anthropic_max_tokens = 8192,
+  anthropic_max_tokens = 16384, # Increased for long transcripts (~45 min episodes)
 
   # Rate limiting (requests per minute)
   assemblyai_rate_limit = 10,
@@ -24,9 +24,6 @@ CONFIG <- list(
   # AssemblyAI polling settings
   assemblyai_poll_interval = 5, # seconds between status checks
   assemblyai_max_poll_attempts = 360, # max 30 minutes wait
-
-  # Speaker settings (for diarization)
-  speakers_expected = 2, # Host (Wayne Nelson) + Premier (Danielle Smith)
 
   # Healthcare keywords for content analysis
   healthcare_keywords = c(
@@ -73,7 +70,8 @@ CONFIG <- list(
     "health funding",
     "healthcare funding",
     "health reform",
-    "healthcare reform"
+    "healthcare reform",
+    "patient experience"
   ),
 
   # Audio clip settings

@@ -1,4 +1,3 @@
-#!/usr/bin/env Rscript
 # Premier Podcast Summary - Main Pipeline
 #
 # This script orchestrates the full pipeline:
@@ -30,7 +29,11 @@ required_packages <- c(
 # Check and load packages
 for (pkg in required_packages) {
   if (!requireNamespace(pkg, quietly = TRUE)) {
-    stop(sprintf("Package '%s' is required. Install with: install.packages('%s')", pkg, pkg))
+    stop(sprintf(
+      "Package '%s' is required. Install with: install.packages('%s')",
+      pkg,
+      pkg
+    ))
   }
   suppressPackageStartupMessages(library(pkg, character.only = TRUE))
 }
@@ -43,6 +46,7 @@ source("R/02_cache_manager.R")
 source("R/03_downloader.R")
 source("R/04_assemblyai.R")
 source("R/05_claude_transcriber.R")
+source("R/05a_speaker_identifier.R")
 source("R/06_claude_analyzer.R")
 source("R/07_audio_clipper.R")
 source("R/08_quarto_generator.R")
@@ -57,10 +61,11 @@ source("R/08_quarto_generator.R")
 #' @param force_reprocess Force reprocessing of all episodes
 #' @param skip_render Skip Quarto book rendering
 #' @return Invisible NULL
-run_pipeline <- function(max_episodes = CONFIG$max_episodes,
-                        force_reprocess = FALSE,
-                        skip_render = FALSE) {
-
+run_pipeline <- function(
+  max_episodes = CONFIG$max_episodes,
+  force_reprocess = FALSE,
+  skip_render = FALSE
+) {
   cli_h1("Premier Podcast Summary Pipeline")
   cli_alert_info("Processing up to {max_episodes} episodes")
 
@@ -70,23 +75,29 @@ run_pipeline <- function(max_episodes = CONFIG$max_episodes,
   cli_h2("Step 1: Initializing")
 
   # Check for API keys
-  tryCatch({
-    get_env_var("ANTHROPIC_API_KEY")
-    cli_alert_success("Anthropic API key found")
-  }, error = function(e) {
-    cli_alert_danger("Anthropic API key not found!")
-    cli_alert_info("Copy .Renviron.example to .Renviron and add your API key")
-    stop("Missing ANTHROPIC_API_KEY")
-  })
+  tryCatch(
+    {
+      get_env_var("ANTHROPIC_API_KEY")
+      cli_alert_success("Anthropic API key found")
+    },
+    error = function(e) {
+      cli_alert_danger("Anthropic API key not found!")
+      cli_alert_info("Copy .Renviron.example to .Renviron and add your API key")
+      stop("Missing ANTHROPIC_API_KEY")
+    }
+  )
 
-  tryCatch({
-    get_env_var("ASSEMBLYAI_API_KEY")
-    cli_alert_success("AssemblyAI API key found")
-  }, error = function(e) {
-    cli_alert_danger("AssemblyAI API key not found!")
-    cli_alert_info("Copy .Renviron.example to .Renviron and add your API key")
-    stop("Missing ASSEMBLYAI_API_KEY")
-  })
+  tryCatch(
+    {
+      get_env_var("ASSEMBLYAI_API_KEY")
+      cli_alert_success("AssemblyAI API key found")
+    },
+    error = function(e) {
+      cli_alert_danger("AssemblyAI API key not found!")
+      cli_alert_info("Copy .Renviron.example to .Renviron and add your API key")
+      stop("Missing ASSEMBLYAI_API_KEY")
+    }
+  )
 
   # Initialize cache
   init_cache()
@@ -122,9 +133,15 @@ run_pipeline <- function(max_episodes = CONFIG$max_episodes,
     cli_alert_warning("Force reprocess enabled - ignoring cache")
     episodes_to_process <- all_episodes |>
       dplyr::slice_head(n = max_episodes) |>
-      dplyr::mutate(episode_dir = file.path(get_project_root(), CONFIG$data_dir, guid))
+      dplyr::mutate(
+        episode_dir = file.path(get_project_root(), CONFIG$data_dir, guid)
+      )
   } else {
-    episodes_to_process <- get_episodes_to_process(all_episodes, cache_df, max_episodes)
+    episodes_to_process <- get_episodes_to_process(
+      all_episodes,
+      cache_df,
+      max_episodes
+    )
   }
 
   if (nrow(episodes_to_process) == 0) {
@@ -172,40 +189,99 @@ run_pipeline <- function(max_episodes = CONFIG$max_episodes,
     episode_dir <- episode$episode_dir
 
     current_status <- get_episode_status(episode$guid, cache_df)
-    if (!is.null(current_status) && current_status %in% c(
-      EPISODE_STATUS$transcribed, EPISODE_STATUS$formatted,
-      EPISODE_STATUS$analyzed, EPISODE_STATUS$complete
-    )) {
-      cli_alert_info("[{i}/{nrow(episodes_to_process)}] Already transcribed: {episode$title}")
+    if (
+      !is.null(current_status) &&
+        current_status %in%
+          c(
+            EPISODE_STATUS$transcribed,
+            EPISODE_STATUS$formatted,
+            EPISODE_STATUS$analyzed,
+            EPISODE_STATUS$complete
+          )
+    ) {
+      cli_alert_info(
+        "[{i}/{nrow(episodes_to_process)}] Already transcribed: {episode$title}"
+      )
       next
     }
 
-    cli_alert_info("[{i}/{nrow(episodes_to_process)}] Transcribing: {episode$title}")
+    cli_alert_info(
+      "[{i}/{nrow(episodes_to_process)}] Transcribing: {episode$title}"
+    )
 
-    tryCatch({
-      result <- transcribe_episode(episode_dir)
+    tryCatch(
+      {
+        result <- transcribe_episode(episode_dir)
 
-      cache_df <- update_episode_status(
-        episode$guid,
-        EPISODE_STATUS$transcribed,
-        cache_df,
-        extra_fields = list(transcript_id = result$id)
-      )
+        cache_df <- update_episode_status(
+          episode$guid,
+          EPISODE_STATUS$transcribed,
+          cache_df,
+          extra_fields = list(transcript_id = result$id)
+        )
 
-      cli_alert_success("Transcription complete")
-    }, error = function(e) {
-      cli_alert_danger("Transcription failed: {e$message}")
-      cache_df <<- update_episode_status(
-        episode$guid,
-        EPISODE_STATUS$error,
-        cache_df,
-        extra_fields = list(error_message = e$message)
-      )
-    })
+        cli_alert_success("Transcription complete")
+      },
+      error = function(e) {
+        cli_alert_danger("Transcription failed: {e$message}")
+        cache_df <<- update_episode_status(
+          episode$guid,
+          EPISODE_STATUS$error,
+          cache_df,
+          extra_fields = list(error_message = e$message)
+        )
+      }
+    )
   }
 
   # -------------------------------------------------------------------------
-  # Step 6: Format Transcripts with Claude
+  # Step 5.5: Identify Speakers with Claude
+  # -------------------------------------------------------------------------
+  cli_h2("Step 5.5: Identifying Speakers")
+
+  for (i in seq_len(nrow(episodes_to_process))) {
+    episode <- episodes_to_process[i, ]
+    episode_dir <- episode$episode_dir
+
+    # Skip if speaker mapping already exists
+    mapping_path <- file.path(episode_dir, "speaker_mapping.json")
+    if (file.exists(mapping_path)) {
+      cli_alert_info(
+        "[{i}/{nrow(episodes_to_process)}] Speaker mapping exists: {episode$title}"
+      )
+      next
+    }
+
+    # Check if raw transcript exists
+    raw_path <- file.path(episode_dir, "assemblyai_raw.json")
+    if (!file.exists(raw_path)) {
+      cli_alert_warning(
+        "[{i}/{nrow(episodes_to_process)}] No raw transcript, skipping speaker ID"
+      )
+      next
+    }
+
+    cli_alert_info(
+      "[{i}/{nrow(episodes_to_process)}] Identifying speakers: {episode$title}"
+    )
+
+    tryCatch(
+      {
+        raw_transcript <- safe_read_json(raw_path)
+        speaker_mapping <- identify_speakers(raw_transcript)
+        save_speaker_mapping(speaker_mapping, episode_dir)
+
+        n_speakers <- length(speaker_mapping$mapping)
+        cli_alert_success("Identified {n_speakers} speakers")
+      },
+      error = function(e) {
+        cli_alert_danger("Speaker identification failed: {e$message}")
+      }
+    )
+  }
+
+  # -------------------------------------------------------------------------
+  # Step 6: Format Transcripts
   # -------------------------------------------------------------------------
   cli_h2("Step 6: Formatting Transcripts")
 
@@ -214,34 +290,47 @@ run_pipeline <- function(max_episodes = CONFIG$max_episodes,
     episode_dir <- episode$episode_dir
 
     current_status <- get_episode_status(episode$guid, cache_df)
-    if (!is.null(current_status) && current_status %in% c(
-      EPISODE_STATUS$formatted, EPISODE_STATUS$analyzed, EPISODE_STATUS$complete
-    )) {
-      cli_alert_info("[{i}/{nrow(episodes_to_process)}] Already formatted: {episode$title}")
+    if (
+      !is.null(current_status) &&
+        current_status %in%
+          c(
+            EPISODE_STATUS$formatted,
+            EPISODE_STATUS$analyzed,
+            EPISODE_STATUS$complete
+          )
+    ) {
+      cli_alert_info(
+        "[{i}/{nrow(episodes_to_process)}] Already formatted: {episode$title}"
+      )
       next
     }
 
-    cli_alert_info("[{i}/{nrow(episodes_to_process)}] Formatting: {episode$title}")
+    cli_alert_info(
+      "[{i}/{nrow(episodes_to_process)}] Formatting: {episode$title}"
+    )
 
-    tryCatch({
-      format_episode_transcript(episode_dir, episode)
+    tryCatch(
+      {
+        format_episode_transcript(episode_dir, episode)
 
-      cache_df <- update_episode_status(
-        episode$guid,
-        EPISODE_STATUS$formatted,
-        cache_df
-      )
+        cache_df <- update_episode_status(
+          episode$guid,
+          EPISODE_STATUS$formatted,
+          cache_df
+        )
 
-      cli_alert_success("Formatting complete")
-    }, error = function(e) {
-      cli_alert_danger("Formatting failed: {e$message}")
-      cache_df <<- update_episode_status(
-        episode$guid,
-        EPISODE_STATUS$error,
-        cache_df,
-        extra_fields = list(error_message = e$message)
-      )
-    })
+        cli_alert_success("Formatting complete")
+      },
+      error = function(e) {
+        cli_alert_danger("Formatting failed: {e$message}")
+        cache_df <<- update_episode_status(
+          episode$guid,
+          EPISODE_STATUS$error,
+          cache_df,
+          extra_fields = list(error_message = e$message)
+        )
+      }
+    )
   }
 
   # -------------------------------------------------------------------------
@@ -254,37 +343,51 @@ run_pipeline <- function(max_episodes = CONFIG$max_episodes,
     episode_dir <- episode$episode_dir
 
     current_status <- get_episode_status(episode$guid, cache_df)
-    if (!is.null(current_status) && current_status %in% c(
-      EPISODE_STATUS$analyzed, EPISODE_STATUS$complete
-    )) {
-      cli_alert_info("[{i}/{nrow(episodes_to_process)}] Already analyzed: {episode$title}")
+    if (
+      !is.null(current_status) &&
+        current_status %in%
+          c(
+            EPISODE_STATUS$analyzed,
+            EPISODE_STATUS$complete
+          )
+    ) {
+      cli_alert_info(
+        "[{i}/{nrow(episodes_to_process)}] Already analyzed: {episode$title}"
+      )
       next
     }
 
-    cli_alert_info("[{i}/{nrow(episodes_to_process)}] Analyzing: {episode$title}")
+    cli_alert_info(
+      "[{i}/{nrow(episodes_to_process)}] Analyzing: {episode$title}"
+    )
 
-    tryCatch({
-      analysis <- analyze_episode(episode_dir, episode)
+    tryCatch(
+      {
+        analysis <- analyze_episode(episode_dir, episode)
 
-      n_highlights <- length(analysis$highlights)
-      score <- analysis$healthcare_focus_score %||% 0
+        n_highlights <- length(analysis$highlights)
+        score <- analysis$healthcare_focus_score %||% 0
 
-      cli_alert_success("Found {n_highlights} healthcare highlights (score: {score}%)")
+        cli_alert_success(
+          "Found {n_highlights} healthcare highlights (score: {score}%)"
+        )
 
-      cache_df <- update_episode_status(
-        episode$guid,
-        EPISODE_STATUS$analyzed,
-        cache_df
-      )
-    }, error = function(e) {
-      cli_alert_danger("Analysis failed: {e$message}")
-      cache_df <<- update_episode_status(
-        episode$guid,
-        EPISODE_STATUS$error,
-        cache_df,
-        extra_fields = list(error_message = e$message)
-      )
-    })
+        cache_df <- update_episode_status(
+          episode$guid,
+          EPISODE_STATUS$analyzed,
+          cache_df
+        )
+      },
+      error = function(e) {
+        cli_alert_danger("Analysis failed: {e$message}")
+        cache_df <<- update_episode_status(
+          episode$guid,
+          EPISODE_STATUS$error,
+          cache_df,
+          extra_fields = list(error_message = e$message)
+        )
+      }
+    )
   }
 
   # -------------------------------------------------------------------------
@@ -297,23 +400,28 @@ run_pipeline <- function(max_episodes = CONFIG$max_episodes,
       episode <- episodes_to_process[i, ]
       episode_dir <- episode$episode_dir
 
-      cli_alert_info("[{i}/{nrow(episodes_to_process)}] Extracting clips: {episode$title}")
+      cli_alert_info(
+        "[{i}/{nrow(episodes_to_process)}] Extracting clips: {episode$title}"
+      )
 
-      tryCatch({
-        clips <- extract_episode_clips(episode_dir)
+      tryCatch(
+        {
+          clips <- extract_episode_clips(episode_dir)
 
-        n_clips <- sum(clips$success)
-        cli_alert_success("Extracted {n_clips} clips")
+          n_clips <- sum(clips$success)
+          cli_alert_success("Extracted {n_clips} clips")
 
-        cache_df <- update_episode_status(
-          episode$guid,
-          EPISODE_STATUS$clipped,
-          cache_df
-        )
-      }, error = function(e) {
-        cli_alert_warning("Clip extraction failed: {e$message}")
-        # Don't mark as error - clips are optional
-      })
+          cache_df <- update_episode_status(
+            episode$guid,
+            EPISODE_STATUS$clipped,
+            cache_df
+          )
+        },
+        error = function(e) {
+          cli_alert_warning("Clip extraction failed: {e$message}")
+          # Don't mark as error - clips are optional
+        }
+      )
     }
   } else {
     cli_h2("Step 8: Skipping Audio Clips (FFmpeg not available)")
@@ -328,21 +436,26 @@ run_pipeline <- function(max_episodes = CONFIG$max_episodes,
     episode <- episodes_to_process[i, ]
     episode_dir <- episode$episode_dir
 
-    cli_alert_info("[{i}/{nrow(episodes_to_process)}] Generating pages: {episode$title}")
+    cli_alert_info(
+      "[{i}/{nrow(episodes_to_process)}] Generating pages: {episode$title}"
+    )
 
-    tryCatch({
-      generate_single_episode_pages(episode, episode_dir)
+    tryCatch(
+      {
+        generate_single_episode_pages(episode, episode_dir)
 
-      cache_df <- update_episode_status(
-        episode$guid,
-        EPISODE_STATUS$complete,
-        cache_df
-      )
+        cache_df <- update_episode_status(
+          episode$guid,
+          EPISODE_STATUS$complete,
+          cache_df
+        )
 
-      cli_alert_success("Pages generated")
-    }, error = function(e) {
-      cli_alert_danger("Page generation failed: {e$message}")
-    })
+        cli_alert_success("Pages generated")
+      },
+      error = function(e) {
+        cli_alert_danger("Page generation failed: {e$message}")
+      }
+    )
   }
 
   # Regenerate index page
@@ -386,15 +499,20 @@ render_book <- function() {
   cli_alert_info("Rendering Quarto book...")
 
   # Check if quarto is available
-  quarto_available <- tryCatch({
-    system2("quarto", "--version", stdout = TRUE, stderr = TRUE)
-    TRUE
-  }, error = function(e) {
-    FALSE
-  })
+  quarto_available <- tryCatch(
+    {
+      system2("quarto", "--version", stdout = TRUE, stderr = TRUE)
+      TRUE
+    },
+    error = function(e) {
+      FALSE
+    }
+  )
 
   if (!quarto_available) {
-    cli_alert_warning("Quarto CLI not found. Install from: https://quarto.org/docs/get-started/")
+    cli_alert_warning(
+      "Quarto CLI not found. Install from: https://quarto.org/docs/get-started/"
+    )
     cli_alert_info("You can render manually with: quarto render")
     return(invisible(NULL))
   }
@@ -462,50 +580,17 @@ process_single_episode <- function(episode_number = 1, force = FALSE) {
   episode
 }
 
-# ============================================================================
-# CLI Interface
-# ============================================================================
+#----------------------------------------------------------------------------
 
-# Run if executed directly
-if (sys.nframe() == 0) {
-  args <- commandArgs(trailingOnly = TRUE)
+run_pipeline(1, force_reprocess = TRUE, skip_render = FALSE)
 
-  if ("--help" %in% args || "-h" %in% args) {
-    cat("
-Premier Podcast Summary Pipeline
 
-Usage: Rscript run.R [options]
+# Run the pipeline if this script is executed directly
+# zip the contents of the _book directory, excluding episode.mp3 files
+files_to_zip <- dir_ls(".", recurse = TRUE, type = "file") |>
+  discard(~ str_detect(path_file(.x), "^episode\\.mp3$"))
 
-Options:
-  --max-episodes N    Maximum episodes to process (default: 5)
-  --force             Force reprocessing of all episodes
-  --skip-render       Skip Quarto book rendering
-  --help, -h          Show this help message
-
-Examples:
-  Rscript run.R                           # Process up to 5 new episodes
-
-  Rscript run.R --max-episodes 10         # Process up to 10 episodes
-  Rscript run.R --force                   # Reprocess all episodes
-  Rscript run.R --skip-render             # Skip rendering (just process)
-
-")
-  } else {
-    # Parse arguments
-    max_episodes <- CONFIG$max_episodes
-    force <- "--force" %in% args
-    skip_render <- "--skip-render" %in% args
-
-    max_idx <- which(args == "--max-episodes")
-    if (length(max_idx) > 0 && max_idx < length(args)) {
-      max_episodes <- as.integer(args[max_idx + 1])
-    }
-
-    # Run pipeline
-    run_pipeline(
-      max_episodes = max_episodes,
-      force_reprocess = force,
-      skip_render = skip_render
-    )
-  }
-}
+zip::zip("current_folder.zip", files = files_to_zip)
+cli_alert_success(
+  "Zipped current folder to current_folder.zip (episode.mp3 files excluded)"
+)

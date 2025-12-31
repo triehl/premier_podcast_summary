@@ -8,31 +8,47 @@ categories: [healthcare, policy, Alberta]
 ## Episode Overview
 **Air Date:** December 20, 2025
 
-This episode contains minimal healthcare discussion, focusing primarily on constitutional reform, education funding, and provincial autonomy. Healthcare mentions are limited to brief discussions about AISH program navigation requiring multiple doctor appointments and barriers to accessing family physicians for disability benefit applications.
+This episode briefly touches on healthcare in two contexts: Premier Smith discussing the challenges of AISH recipients accessing federal disability benefits, which requires multiple doctor appointments in an already strained healthcare system, and her closing remarks emphasizing healthcare improvements as a top priority for 2026, specifically around family doctor attachment, surgical waitlists, and patient experience.
 
-**Healthcare Focus Score:** 8%
+**Healthcare Focus Score:** 12%
 
 ## Healthcare Highlights
 
-### Additional Mentions
+### Key Points
 
-**[11:00 - 13:30]** Caller Jerry identifies healthcare system burden caused by AISH federal benefit application process, noting difficulty accessing family doctors and requiring four separate doctor appointments for disability paperwork.
+**[10:54 - 16:18]** Discussion about AISH program complications and healthcare system burden, with caller Jerry highlighting that the federal disability benefit application process requires up to four doctor appointments, straining an already short-staffed healthcare system, particularly affecting those without family doctors.
 
-> "The 24% you speak of that haven't applied either don't have access to or have a family doctor. For myself—and you know that you have to apply for the tax credit first to be eligible to apply for the benefit. Having said that, that's four doctor's appointments and I have a family doctor... it's a burden on the healthcare system as a whole which is already short in this province."
+> "Having said that, that's four doctor's appointments and I have a family doctor one to tell him we have to do paperwork. He says I don't have time now. Rebook and we'll do it. So that's two for the tax credit, two more for the benefit."
 
-*Topics: family medicine, primary care, physician access, healthcare system capacity, disability services*
+*Topics: primary care, family medicine, healthcare system capacity, doctor shortages, patient access*
 
-<audio controls src="../data/episodes/2fa8689e-ddce-11f0-b9ff-93eb12eb3272/clips/clip_001_11-00.mp3">Your browser does not support audio.</audio>
+<audio controls src="../data/episodes/2fa8689e-ddce-11f0-b9ff-93eb12eb3272/clips/clip_001_10-54.mp3">Your browser does not support audio.</audio>
+
+[View in transcript](2025-12-20-your-province-your-premier-12202025_transcript.qmd#healthcare)
 
 ---
 
-**[13:30 - 14:15]** Premier acknowledges barrier of costly doctor assessments for disability applications and commits to exploring use of provincial approved doctors instead, mentioning $430 assessment fees as concern.
+**[16:18 - 16:40]** Premier Smith acknowledges the barrier of expensive doctor assessments for disability benefits, noting reports of $430 fees, and commits to exploring using provincially approved doctors for these assessments to reduce costs and improve access.
 
-> "I've already sent a note to my Assisted Living and Social Services minister to see if there's a way that we could have our own approved doctors be able to do these kinds of assessments, because some of the dollar figures we saw in that one report of $430 to go see a doctor seemed pretty high to us."
+> "I've already sent a note to my assisted living and social services minister to see if there's a way that we could have our own approved doctors be able to do these kinds of assessments, because some of the dollar figures we saw in that one report of $430 to go see a doctor seemed pretty high to us."
 
-*Topics: physician services, healthcare costs, disability assessments, medical services access*
+*Topics: medical services, healthcare costs, access to care, physician services*
 
-<audio controls src="../data/episodes/2fa8689e-ddce-11f0-b9ff-93eb12eb3272/clips/clip_002_13-30.mp3">Your browser does not support audio.</audio>
+<audio controls src="../data/episodes/2fa8689e-ddce-11f0-b9ff-93eb12eb3272/clips/clip_002_16-18.mp3">Your browser does not support audio.</audio>
+
+[View in transcript](2025-12-20-your-province-your-premier-12202025_transcript.qmd#federal-relations)
+
+---
+
+**[42:55 - 43:45]** Premier Smith responds positively to closing question about concrete improvements for 2026, emphasizing healthcare as top priority with specific focus on family doctor attachment, surgical backlog reduction, and improving overall patient experience after completing system restructuring.
+
+> "So much on healthcare. I wish I could say just one, but it's what I'm looking forward to. Seeing people get attached to a family doctor or nurse practitioner, improving the patient experience to get into surgery, clearing the surgical background backlog. Those are the things that we're working really hard on next year and we're finally at the point where we finished all of our restructuring and so now we get to implement."
+
+*Topics: primary care, family medicine, surgical wait times, patient care, healthcare system reform, nurse practitioners*
+
+<audio controls src="../data/episodes/2fa8689e-ddce-11f0-b9ff-93eb12eb3272/clips/clip_003_42-55.mp3">Your browser does not support audio.</audio>
+
+[View in transcript](2025-12-20-your-province-your-premier-12202025_transcript.qmd#discussion)
 
 ---
 
