@@ -582,6 +582,7 @@ process_single_episode <- function(episode_number = 1, force = FALSE) {
 
 #----------------------------------------------------------------------------
 
+# For testing purposes
 # For each folder in data/episodes delete all the files except episode.mp3, assemblyai_raw.json, speaker_mapping.json
 clean_episode_folders <- function() {
   data_dir <- file.path(get_project_root(), CONFIG$data_dir)
@@ -609,9 +610,10 @@ clean_episode_folders <- function() {
   }
 }
 
-clean_episode_folders()
+# For testing
+# clean_episode_folders()
 
-run_pipeline(1, force_reprocess = TRUE, skip_render = FALSE)
+run_pipeline(5, force_reprocess = TRUE, skip_render = FALSE)
 
 
 # Run the pipeline if this script is executed directly

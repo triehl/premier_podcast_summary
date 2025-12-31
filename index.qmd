@@ -1,32 +1,19 @@
 ---
-title: "Your Province. Your Premier."
-subtitle: "Healthcare Policy Analysis"
+title: "Insights from the Premier's radio show"
+toc: false
 ---
 
-## About This Podcast
+# Overview
 
-Join host Wayne Nelson as he welcomes Premier Danielle Smith to the 880 CHED and QR Calgary airwaves. Your province. Your Premier gives Albertans direct access to ask the premier about key issues facing our province.
+ This site provides insights related to physicians and the healthcare system from the Premier's radio show ["Your Province. Your Premier."](https://globalnews.ca/edmonton/program/your-province-your-premier)
 
-Host **Wayne Nelson** welcomes **Premier Danielle Smith** to discuss key provincial issues affecting Albertans.
-
-## Healthcare Focus
-
-This site highlights content specifically related to:
-
-- Physicians and doctors
-- Healthcare system and policy
-- Hospitals and clinics
-- Alberta Health Services (AHS)
-- Medical services access and reform
-
-## Episodes
+# Episodes
 
 | Date | Episode | Healthcare Score |
 |------|---------|------------------|
 | 2025-12-20 | [Your Province. Your Premier. 12/20/2025 ](episodes/2025-12-20-your-province-your-premier-12202025.qmd) | 15% |
-
-
----
-
-*Analysis generated using AssemblyAI for transcription and Claude for content analysis.*
+| 2025-12-06 | [Your Province. Your Premier. 12/06/2025](episodes/2025-12-06-your-province-your-premier-12062025.qmd) | 25% |
+| 2025-11-22 | [Your Province. Your Premier. 11/22/2025 ](episodes/2025-11-22-your-province-your-premier-11222025.qmd) | 35% |
+| 2025-11-08 | [Your Province. Your Premier. 11/08/2025](episodes/2025-11-08-your-province-your-premier-11082025.qmd) | 35% |
+| 2025-10-25 | [Your Province. Your Premier 10/25/2025 ](episodes/2025-10-25-your-province-your-premier-10252025.qmd) | 8% |
 

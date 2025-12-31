@@ -1,0 +1,118 @@
+/* AMA stylesheet for quarto reports  */
+/* https://colordesigner.io/gradient-generator */
+
+h1:not(.title) {
+  background-color: rgba(0, 101, 164, 0.15); /*#c6ddeb*/
+  padding: 5px;
+  margin-top: 2em;
+  font-size: 1.5rem;
+  border-radius: 4px;
+}
+
+#report-title {
+font-size: 1.5rem;
+}
+
+
+h2 {
+margin-top: 2.5em;
+font-size: 1.2rem;
+}
+
+h3 {
+margin-top: 2.5em;
+font-size: 1.2rem;
+}
+
+.quarto-title {
+  /*background-image: url(ama_logo_1.svg);*/
+  background-size: contain;
+  background-position: right;
+  background-repeat: no-repeat;
+  padding-left: 0px;
+  background-origin: content-box;
+}
+
+.title {
+margin-left: 0;
+}
+
+.small {
+  font-size: 16px;
+  font-weight: normal;
+}
+
+.section_header {
+  font-size: 1.75rem;
+}
+
+@page {
+  margin-top: 10mm;
+  margin-left: 0mm;
+  margin-right: 0mm;
+  margin-bottom: 25mm;  
+}
+
+@page :first {
+  margin-top: 0mm;
+  margin-left: 0mm;
+  margin-right: 0mm;
+  margin-bottom: 25mm;
+}
+
+@page {
+  @bottom-left {
+    content: "Page " counter(page) " of " counter(pages);
+  }
+}
+
+/* cardsd   */
+
+.card .icon {
+  font-size: 3rem;
+  color: #0065A4;
+}
+
+.card-text {
+  color: #0065A4;
+  font-size: 0.75rem;
+}
+
+.card {
+  transition: all 0.25s;
+}
+
+.card:hover {
+  background-color: rgba(0, 101, 164, 0.15);
+  color: #0065A4;
+}
+
+.card:hover .icon,
+.card:hover .card-text {
+  color: #0065A4;
+}
+
+
+.overlayone{
+  width: 180px;
+  height: 180px;
+  display: inline-block;
+  position: relative;
+}
+
+.overlayinn {
+  background-color: rgba(0, 101, 164, 0.15); /* rgba(222,179,8, 0.25) */
+  height: 100%;
+  width: 100%;
+  opacity: 0;
+  top: 0;
+  left: 0;
+  position: absolute;
+  padding: 70px;
+  transition: opacity .2s;
+}
+
+.overlayinn:hover {
+  opacity: 1;
+  transition: opacity .2s;
+}

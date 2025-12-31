@@ -1,16 +1,11 @@
 ---
 title: "Your Province. Your Premier. 12/20/2025 "
-date: 2025-12-20
-description: "Healthcare policy analysis from Premier Danielle Smith podcast"
-categories: [healthcare, policy, Alberta]
 ---
 
 ## Episode Overview
 **Air Date:** December 20, 2025
 
 This episode primarily focused on constitutional reforms and citizen petitions, with healthcare discussed as one of several policy areas. Premier Smith addressed healthcare system improvements planned for 2026, including physician recruitment, surgical backlog reduction, and patient experience enhancement. Healthcare received moderate attention compared to other topics like education funding and federal-provincial relations.
-
-**Healthcare Focus Score:** 15%
 
 ## Healthcare Highlights
 

@@ -4,27 +4,49 @@ project:
     - "data/episodes/*/clips/*.mp3"
 
 website:
-  title: "Radio show: Your Province. Your Premier."
+  title: ""
   description: |
     Analysis of healthcare-related content from Alberta Premier Danielle Smith
     on the "Your Province. Your Premier." radio show.
-
+  navbar:
+      pinned: true
+      left:
+        - text: "Home"
+          href: "https://connect.albertadoctors.org/he/"
+        - text: "Reports"
+          href: "https://connect.albertadoctors.org/he/reports"
+        - text: "Apps"
+          href: "https://connect.albertadoctors.org/he/apps"
+        - text: "Data"
+          href: "https://connect.albertadoctors.org/he/data"
+        - text: "Learn R"
+          href: "https://connect.albertadoctors.org/he/learn"
   sidebar:
     style: floating
     search: true
     contents:
-      - index.qmd
+      - text: "Insights from the Premier's radio show"
+        file: index.qmd
       - section: "Episodes"
-        content:
-      - episodes/2025-12-20-your-province-your-premier-12202025.qmd
-      - episodes/2025-12-20-your-province-your-premier-12202025_transcript.qmd
+        contents:
+          - href: episodes/2025-12-20-your-province-your-premier-12202025.qmd
+            text: December 20, 2025
+          - href: episodes/2025-12-06-your-province-your-premier-12062025.qmd
+            text: December 06, 2025
+          - href: episodes/2025-11-22-your-province-your-premier-11222025.qmd
+            text: November 22, 2025
+          - href: episodes/2025-11-08-your-province-your-premier-11082025.qmd
+            text: November 08, 2025
+          - href: episodes/2025-10-25-your-province-your-premier-10252025.qmd
+            text: October 25, 2025
       - about.qmd
 
 format:
   html:
     theme:
-      light: cosmo
-    css: styles.css
+      - flatly
+      - "custom.scss"
+    css: amaweb.css
     toc: true
     toc-depth: 2
     number-sections: false

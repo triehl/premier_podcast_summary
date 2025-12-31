@@ -6,7 +6,7 @@ CONFIG <- list(
   rss_url = "https://feeds.megaphone.fm/CORU5449522127",
 
   # Processing limits
-  max_episodes = 1, # Initially process last 5 episodes
+  max_episodes = 5, # Initially process last 5 episodes
 
   # API endpoints
   assemblyai_base_url = "https://api.assemblyai.com/v2",

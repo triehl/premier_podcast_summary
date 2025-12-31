@@ -26,13 +26,10 @@ generate_episode_page <- function(
   yaml_header <- sprintf(
     '---
 title: "%s"
-date: %s
-description: "Healthcare policy analysis from Premier Danielle Smith podcast"
-categories: [healthcare, policy, Alberta]
 ---
 ',
-    gsub('"', '\\"', episode_metadata$title),
-    date_iso
+    gsub('"', '\\"', episode_metadata$title) #,
+    #date_iso
   )
 
   # Build content sections
@@ -49,13 +46,14 @@ categories: [healthcare, policy, Alberta]
   }
 
   if (!is.null(analysis$healthcare_focus_score)) {
-    content <- c(
-      content,
-      sprintf(
-        "**Healthcare Focus Score:** %d%%\n\n",
-        as.integer(analysis$healthcare_focus_score)
-      )
-    )
+    # TREVOR NOTE: hide score
+    # content <- c(
+    #   content,
+    #   sprintf(
+    #     "**Healthcare Focus Score:** %d%%\n\n",
+    #     as.integer(analysis$healthcare_focus_score)
+    #   )
+    # )
   }
 
   # Healthcare highlights section
@@ -344,8 +342,8 @@ generate_index_page <- function(all_episodes, channel_info) {
 
   # Build YAML header
   yaml_header <- '---
-title: "Your Province. Your Premier."
-subtitle: "Healthcare Policy Analysis"
+title: "Insights from the Premier\'s radio show"
+toc: false
 ---
 '
 
@@ -353,31 +351,22 @@ subtitle: "Healthcare Policy Analysis"
   content <- character()
 
   # Podcast description
-  content <- c(content, "## About This Podcast\n\n")
-  if (
-    !is.null(channel_info$description) && nchar(channel_info$description) > 0
-  ) {
-    content <- c(content, sprintf("%s\n\n", channel_info$description))
-  }
-  content <- c(
-    content,
-    "Host **Wayne Nelson** welcomes **Premier Danielle Smith** to discuss key provincial issues affecting Albertans.\n\n"
-  )
 
-  # Healthcare focus explanation
-  content <- c(content, "## Healthcare Focus\n\n")
-  content <- c(
-    content,
-    "This site highlights content specifically related to:\n\n"
-  )
-  content <- c(content, "- Physicians and doctors\n")
-  content <- c(content, "- Healthcare system and policy\n")
-  content <- c(content, "- Hospitals and clinics\n")
-  content <- c(content, "- Alberta Health Services (AHS)\n")
-  content <- c(content, "- Medical services access and reform\n\n")
+  content <- "# Overview\n\n This site provides insights related to physicians and the healthcare system from the Premier's radio show [\"Your Province. Your Premier.\"](https://globalnews.ca/edmonton/program/your-province-your-premier)\n\n"
+
+  # content <- c(content, "## About This Podcast\n\n")
+  # if (
+  #   !is.null(channel_info$description) && nchar(channel_info$description) > 0
+  # ) {
+  #   content <- c(content, sprintf("%s\n\n", channel_info$description))
+  # }
+  # content <- c(
+  #   content,
+  #   "Host **Wayne Nelson** welcomes **Premier Danielle Smith** to discuss key provincial issues affecting Albertans.\n\n"
+  # )
 
   # Episode list
-  content <- c(content, "## Episodes\n\n")
+  content <- c(content, "# Episodes\n\n")
 
   # Filter to processed episodes (those with .qmd files)
   processed_episodes <- all_episodes |>
@@ -428,12 +417,6 @@ subtitle: "Healthcare Policy Analysis"
     content <- c(content, "*No episodes have been processed yet.*\n")
   }
 
-  content <- c(content, "\n\n---\n\n")
-  content <- c(
-    content,
-    "*Analysis generated using AssemblyAI for transcription and Claude for content analysis.*\n"
-  )
-
   # Write file
   writeLines(c(yaml_header, paste(content, collapse = "")), output_path)
   log_msg("INFO", "Generated index page: {output_path}")
@@ -462,8 +445,14 @@ update_quarto_yml <- function(all_episodes) {
     function(i) {
       ep <- processed_episodes[i, ]
       paste0(
-        sprintf("      - episodes/%s.qmd\n", ep$slug),
-        sprintf("      - episodes/%s_transcript.qmd", ep$slug)
+        sprintf("          - href: episodes/%s.qmd\n", ep$slug),
+        sprintf(
+          "            text: %s",
+          format(as.Date(substr(ep$slug, 1, 10)), "%B %d, %Y")
+        )
+        #  TREVOR NOTE: from before when episode and transcript in sidebar
+        #sprintf("        - episodes/%s.qmd\n", ep$slug),
+        #sprintf("        - episodes/%s_transcript.qmd", ep$slug)
       )
     }
   )
@@ -476,26 +465,40 @@ update_quarto_yml <- function(all_episodes) {
     - "data/episodes/*/clips/*.mp3"
 
 website:
-  title: "Radio show: Your Province. Your Premier."
+  title: ""
   description: |
     Analysis of healthcare-related content from Alberta Premier Danielle Smith
     on the "Your Province. Your Premier." radio show.
-
+  navbar:
+      pinned: true
+      left:
+        - text: "Home"
+          href: "https://connect.albertadoctors.org/he/"
+        - text: "Reports"
+          href: "https://connect.albertadoctors.org/he/reports"
+        - text: "Apps"
+          href: "https://connect.albertadoctors.org/he/apps"
+        - text: "Data"
+          href: "https://connect.albertadoctors.org/he/data"
+        - text: "Learn R"
+          href: "https://connect.albertadoctors.org/he/learn"
   sidebar:
     style: floating
     search: true
     contents:
-      - index.qmd
+      - text: "Insights from the Premier\'s radio show"
+        file: index.qmd
       - section: "Episodes"
-        content:
+        contents:
 %s
       - about.qmd
 
 format:
   html:
     theme:
-      light: cosmo
-    css: styles.css
+      - flatly
+      - "custom.scss"
+    css: amaweb.css
     toc: true
     toc-depth: 2
     number-sections: false
