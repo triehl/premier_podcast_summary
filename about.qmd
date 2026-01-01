@@ -2,27 +2,34 @@
 title: "About This Project"
 ---
 
-## Overview
+# Overview
 
-This site provides automated analysis of healthcare-related content from the podcast "Your Province. Your Premier." featuring Alberta Premier Danielle Smith and host Wayne Nelson.
+- **Description:** This app analyzes the [Premier's call-in radio show](https://globalnews.ca/edmonton/program/your-province-your-premier){target=\"_blank\"} to identify insights related to physicians and the healthcare system
 
-## How It Works
+- **Goal:** Assist PC&E staff identify comments and policy statements made by the Premier which may impact the AMA without having to listen to the entire show
 
-1. **RSS Monitoring**: The system scans the podcast RSS feed for new episodes
-2. **Transcription**: Episodes are transcribed using AssemblyAI with speaker diarization
-3. **Content Analysis**: Claude AI analyzes transcripts for healthcare-related content
-4. **Audio Clips**: Key moments are extracted as audio clips
+# User responsibilities
+
+The episode transcript is computer generated from the radio show audio files. As a result, some acronyms or text may not be transcribed correctly or speakers may be misidentified. **The user is responsible for confirming the actual content from the audio file before quoting from an episode.**
+
+# How It Works
+
+1. **RSS Monitoring**: The app scans the [radio show RSS feed](https://globalnews.ca/edmonton/program/your-province-your-premier){target=\"_blank\"} for new episodes
+2. **Transcription**: Episodes are transcribed using AssemblyAI with speaker identification and timestamps
+2. **Transcript theming**: Claude AI analyzes the transcript to identify caller themes and create timestamped headers ([example](https://connect.albertadoctors.org/he-reports/premiers-radio-show/episodes/2025-12-20-your-province-your-premier-12202025_transcript.html){target=\"_blank\"})
+3. **Content Analysis**: Claude AI analyzes the transcript for healthcare-related content and identifies key quotes from the Premier ([example](https://connect.albertadoctors.org/he-reports/premiers-radio-show/episodes/2025-12-20-your-province-your-premier-12202025.html){target=\"_blank\"})
+4. **Audio Clips**: Audio clips of the key quotes are extracted so they can easily be verified
 5. **Publication**: Results are compiled into this Quarto book
 
-## Technology Stack
+# Technology Stack
 
 - **R**: Data processing and orchestration
-- **AssemblyAI**: Speech-to-text transcription with speaker identification
+- **AssemblyAI**: Speech-to-text transcription with speaker identification and timestamps
 - **Claude API**: AI-powered content analysis
 - **Quarto**: Document generation and website publishing
 - **FFmpeg**: Audio clip extraction
 
-## Healthcare Topics
+# Healthcare Topics
 
 The analysis focuses on content related to:
 
@@ -35,12 +42,3 @@ The analysis focuses on content related to:
 - Patient care and outcomes
 - Primary care and family medicine
 - Emergency services
-- Mental health services
-
-## Disclaimer
-
-This analysis is automated and may not capture all nuances of the discussions. The transcripts and analysis are provided for informational purposes. For official statements, please refer to the original podcast episodes.
-
-## Source Code
-
-The code for this project is available in the project repository.

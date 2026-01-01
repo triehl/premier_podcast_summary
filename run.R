@@ -530,6 +530,11 @@ render_book <- function() {
   invisible(NULL)
 }
 
+
+# ============================================================================
+# Singluar Episode Processing (for testing)
+# ============================================================================
+
 #' Process a single episode (for testing/debugging)
 #'
 #' @param episode_number Which episode to process (1 = most recent)
@@ -580,7 +585,10 @@ process_single_episode <- function(episode_number = 1, force = FALSE) {
   episode
 }
 
-#----------------------------------------------------------------------------
+
+# ============================================================================
+# Execute
+# ============================================================================
 
 # For testing purposes
 # For each folder in data/episodes delete all the files except episode.mp3, assemblyai_raw.json, speaker_mapping.json
@@ -619,9 +627,10 @@ run_pipeline(5, force_reprocess = TRUE, skip_render = FALSE)
 # Run the pipeline if this script is executed directly
 # zip the contents of the _book directory, excluding episode.mp3 files
 files_to_zip <- dir_ls(".", recurse = TRUE, type = "file") |>
-  discard(~ str_detect(path_file(.x), "^episode\\.mp3$"))
+  discard(~ str_detect(path_file(.x), "^episode\\.mp3$")) |>
+  discard(~ str_detect(.x, "data/episodes/.*\\.md$"))
 
 zip::zip("current_folder.zip", files = files_to_zip)
 cli_alert_success(
-  "Zipped current folder to current_folder.zip (episode.mp3 files excluded)"
+  "Zipped current folder to current_folder.zip (episode.mp3 and *.md files in episodes excluded)"
 )

@@ -5,6 +5,7 @@ project:
 
 website:
   title: ""
+  bread-crumbs: false
   description: |
     Analysis of healthcare-related content from Alberta Premier Danielle Smith
     on the "Your Province. Your Premier." radio show.
@@ -25,18 +26,19 @@ website:
     style: floating
     search: true
     contents:
-      - text: "Insights from the Premier's radio show"
+      - text: "🏠️ Insights from the Premier's radio show"
         file: index.qmd
+      - text: "---"
       - section: "Episodes"
         contents:
           - href: episodes/2025-12-20-your-province-your-premier-12202025.qmd
             text: December 20, 2025
           - href: episodes/2025-12-06-your-province-your-premier-12062025.qmd
-            text: December 06, 2025
+            text: December 6, 2025
           - href: episodes/2025-11-22-your-province-your-premier-11222025.qmd
             text: November 22, 2025
           - href: episodes/2025-11-08-your-province-your-premier-11082025.qmd
-            text: November 08, 2025
+            text: November 8, 2025
           - href: episodes/2025-10-25-your-province-your-premier-10252025.qmd
             text: October 25, 2025
       - about.qmd

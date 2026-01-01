@@ -1,19 +1,26 @@
 ---
-title: "Insights from the Premier's radio show"
+title: "Insights from the Premier's call-in radio show: *Your Province. Your Premier.*"
 toc: false
+tbl-colwidths: [25, 65, 10]
 ---
 
 # Overview
 
- This site provides insights related to physicians and the healthcare system from the Premier's radio show ["Your Province. Your Premier."](https://globalnews.ca/edmonton/program/your-province-your-premier)
+ - **Description:** This app analyzes the [Premier's  call-in radio show](https://globalnews.ca/edmonton/program/your-province-your-premier){target="_blank"} to identify insights related to physicians and the healthcare system.
+
+ - **Goal:** Assist PC&E staff identify comments and policy statements made by the Premier which may impact the AMA without having to listen to the entire show.
+
+:::{.callout-note appearance="minimal"}
+***Note:** The episode transcripts are computer generated from the radio show audio files. As a result, some acronyms or text may not be transcribed correctly or the speaker may be misidentified. Confirm the actual content from the audio file before quoting from an episode.*
+:::
 
 # Episodes
 
-| Date | Episode | Healthcare content |
-|------|---------|--------------------|
-| 2025-12-20 | [Your Province. Your Premier. 12/20/2025 ](episodes/2025-12-20-your-province-your-premier-12202025.qmd) | ⚫⚫⚪ |
-| 2025-12-06 | [Your Province. Your Premier. 12/06/2025](episodes/2025-12-06-your-province-your-premier-12062025.qmd) | ⚫⚫⚫ |
-| 2025-11-22 | [Your Province. Your Premier. 11/22/2025 ](episodes/2025-11-22-your-province-your-premier-11222025.qmd) | ⚫⚫⚫ |
-| 2025-11-08 | [Your Province. Your Premier. 11/08/2025](episodes/2025-11-08-your-province-your-premier-11082025.qmd) | ⚫⚫⚫ |
-| 2025-10-25 | [Your Province. Your Premier 10/25/2025 ](episodes/2025-10-25-your-province-your-premier-10252025.qmd) | ⚫⚪⚪ |
+| Date | Healthcare highlights | Healthcare content |
+|------|-----------------------|--------------------|
+| [December 20, 2025](episodes/2025-12-20-your-province-your-premier-12202025.qmd) | This episode primarily focused on constitutional reforms and citizen petitions, with healthcare discussed as one of several policy areas. Premier Smith addressed healthcare system improvements planned for 2026, including physician recruitment, surgical backlog reduction, and patient experience enhancement. Healthcare received moderate attention compared to other topics like education funding and federal-provincial relations. | ⚫⚪⚪ |
+| [December 6, 2025](episodes/2025-12-06-your-province-your-premier-12062025.qmd) | This episode contains substantial healthcare discussion, primarily focused on chartered surgical facilities, surgical backlogs, and healthcare system pressures from immigration. Premier Smith discusses terminating AHS contracts with facilities connected to Sam Rach, transitioning to activity-based funding, and announcing 50,000 additional surgeries to clear backlogs. She also addresses healthcare system strain from federal immigration policy and responds to caller criticism about healthcare promises. | ⚫⚫⚪ |
+| [November 22, 2025](episodes/2025-11-22-your-province-your-premier-11222025.qmd) | This episode features extensive discussion of healthcare labor relations, with the Premier announcing a tentative agreement reached with 16,000 healthcare workers just 18 minutes after the strike deadline. The Premier also addresses healthcare staffing strategy, defends the expansion of chartered surgical facilities and dual practice for physicians, and responds to criticisms about privatization in the healthcare system. | ⚫⚫⚫ |
+| [November 8, 2025](episodes/2025-11-08-your-province-your-premier-11082025.qmd) | This episode features Premier Smith discussing healthcare system management reforms, including the transition from centralized AHS management to focused ministerial oversight. She defends changes to COVID vaccine distribution, addresses concerns about healthcare worker wages and potential strikes, and discusses challenges in the healthcare system including EMS response times, surgical capacity, and continuing care bed shortages. | ⚫⚫⚫ |
+| [October 25, 2025](episodes/2025-10-25-your-province-your-premier-10252025.qmd) | This episode focused primarily on the teachers' strike and education issues, with minimal healthcare content. The only healthcare-related discussion involved a brief mention of mental health professionals in schools and a short exchange about paramedic wage negotiations. | ⚫⚪⚪ |
 

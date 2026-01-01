@@ -19,7 +19,7 @@ generate_episode_page <- function(
   output_path <- file.path(get_project_root(), output_dir, paste0(slug, ".qmd"))
 
   # Format date for display
-  date_display <- format(episode_metadata$pub_date, "%B %d, %Y")
+  date_display <- format(episode_metadata$pub_date, "%B %-d, %Y")
   date_iso <- format(episode_metadata$pub_date, "%Y-%m-%d")
 
   # Build YAML header
@@ -28,8 +28,7 @@ generate_episode_page <- function(
 title: "%s"
 ---
 ',
-    gsub('"', '\\"', episode_metadata$title) #,
-    #date_iso
+    paste0(date_display, " episode")
   )
 
   # Build content sections
@@ -37,7 +36,13 @@ title: "%s"
 
   # Overall summary section
   content <- c(content, "# Episode Overview\n")
-  content <- c(content, sprintf("**Air Date:** %s\n\n", date_display))
+  #content <- c(content, sprintf("**Air Date:** %s\n\n", date_display))
+
+  # add disclaimer
+  content <- c(
+    content,
+    ":::{.callout-note appearance=\"minimal\"}\n***Note:** The episode transcripts are computer generated from the [radio show audio files](https://globalnews.ca/edmonton/program/your-province-your-premier){target=\"_blank\"}. As a result, some acronyms or text may not be transcribed correctly or the speaker may be misidentified. Confirm the actual content from the audio file before quoting from an episode.*\n:::\n\n"
+  )
 
   if (
     !is.null(analysis$overall_summary) && nchar(analysis$overall_summary) > 0
@@ -303,17 +308,13 @@ generate_transcript_page <- function(
     paste0(transcript_slug, ".qmd")
   )
 
+  date_display <- format(episode_metadata$pub_date, "%B %-d, %Y")
   date_iso <- format(episode_metadata$pub_date, "%Y-%m-%d")
 
   # Build YAML header
   yaml_header <- sprintf(
-    '---
-title: "Transcript: %s"
-date: %s
----
-',
-    gsub('"', '\\"', episode_metadata$title),
-    date_iso
+    '---\ntitle: "Transcript: %s"\n---\n',
+    paste0(date_display, " episode")
   )
 
   # Content
@@ -322,6 +323,14 @@ date: %s
     content,
     sprintf("[← Back to Episode Analysis](%s.qmd)\n\n", slug)
   )
+
+  # add disclaimer
+  content <- c(
+    content,
+    ":::{.callout-note appearance=\"minimal\"}\n***Note:** The episode transcripts are computer generated from the [radio show audio files](https://globalnews.ca/edmonton/program/your-province-your-premier){target=\"_blank\"}. As a result, some acronyms or text may not be transcribed correctly or the speaker may be misidentified. Confirm the actual content from the audio file before quoting from an episode.*\n:::\n\n"
+  )
+
+  # break and transcript contents
   content <- c(content, "---\n\n")
   content <- c(content, transcript_md)
 
@@ -341,29 +350,14 @@ generate_index_page <- function(all_episodes, channel_info) {
   output_path <- file.path(get_project_root(), "index.qmd")
 
   # Build YAML header
-  yaml_header <- '---
-title: "Insights from the Premier\'s radio show"
-toc: false
----
-'
+  yaml_header <- '---\ntitle: "Insights from the Premier\'s call-in radio show: *Your Province. Your Premier.*"\ntoc: false\ntbl-colwidths: [25, 65, 10]\n---\n'
 
   # Build content
   content <- character()
 
   # Podcast description
 
-  content <- "# Overview\n\n This site provides insights related to physicians and the healthcare system from the Premier's radio show [\"Your Province. Your Premier.\"](https://globalnews.ca/edmonton/program/your-province-your-premier)\n\n"
-
-  # content <- c(content, "## About This Podcast\n\n")
-  # if (
-  #   !is.null(channel_info$description) && nchar(channel_info$description) > 0
-  # ) {
-  #   content <- c(content, sprintf("%s\n\n", channel_info$description))
-  # }
-  # content <- c(
-  #   content,
-  #   "Host **Wayne Nelson** welcomes **Premier Danielle Smith** to discuss key provincial issues affecting Albertans.\n\n"
-  # )
+  content <- "# Overview\n\n - **Description:** This app analyzes the [Premier's  call-in radio show](https://globalnews.ca/edmonton/program/your-province-your-premier){target=\"_blank\"} to identify insights related to physicians and the healthcare system.\n\n - **Goal:** Assist PC&E staff identify comments and policy statements made by the Premier which may impact the AMA without having to listen to the entire show.\n\n:::{.callout-note appearance=\"minimal\"}\n***Note:** The episode transcripts are computer generated from the radio show audio files. As a result, some acronyms or text may not be transcribed correctly or the speaker may be misidentified. Confirm the actual content from the audio file before quoting from an episode.*\n:::\n\n"
 
   # Episode list
   content <- c(content, "# Episodes\n\n")
@@ -377,12 +371,20 @@ toc: false
     )))
 
   if (nrow(processed_episodes) > 0) {
-    content <- c(content, "| Date | Episode | Healthcare content |\n")
-    content <- c(content, "|------|---------|--------------------|\n")
+    content <- c(
+      content,
+      "| Date | Healthcare highlights | Healthcare content |\n"
+    )
+    content <- c(
+      content,
+      "|------|-----------------------|--------------------|\n"
+    )
 
     for (i in seq_len(nrow(processed_episodes))) {
       ep <- processed_episodes[i, ]
-      date_str <- format(ep$pub_date, "%Y-%m-%d")
+
+      # output date
+      date_str <- format(ep$pub_date, "%B %-d, %Y")
 
       # Try to load analysis for healthcare score
       analysis_path <- file.path(
@@ -391,6 +393,20 @@ toc: false
         ep$guid,
         "analysis.json"
       )
+
+      # Output the episode summary
+      summary <- if (file.exists(analysis_path)) {
+        analysis <- safe_read_json(analysis_path)
+        if (!is.null(analysis$overall_summary)) {
+          analysis$overall_summary
+        } else {
+          "—"
+        }
+      } else {
+        "—"
+      }
+
+      # Convert the score to a visual indicator
       score <- if (file.exists(analysis_path)) {
         analysis <- safe_read_json(analysis_path)
         if (!is.null(analysis$healthcare_focus_score)) {
@@ -399,9 +415,9 @@ toc: false
             "",
             analysis$healthcare_focus_score
           ))
-          if (score_num <= 10) {
+          if (score_num <= 15) {
             "\u26ab\u26aa\u26aa"
-          } else if (score_num <= 20) {
+          } else if (score_num <= 25) {
             "\u26ab\u26ab\u26aa"
           } else {
             "\u26ab\u26ab\u26ab"
@@ -416,10 +432,10 @@ toc: false
       content <- c(
         content,
         sprintf(
-          "| %s | [%s](episodes/%s.qmd) | %s |\n",
+          "| [%s](episodes/%s.qmd) | %s | %s |\n",
           date_str,
-          gsub("\\|", "\\\\|", ep$title),
           ep$slug,
+          summary,
           score
         )
       )
@@ -459,7 +475,7 @@ update_quarto_yml <- function(all_episodes) {
         sprintf("          - href: episodes/%s.qmd\n", ep$slug),
         sprintf(
           "            text: %s",
-          format(as.Date(substr(ep$slug, 1, 10)), "%B %d, %Y")
+          format(as.Date(substr(ep$slug, 1, 10)), "%B %-d, %Y")
         )
         #  TREVOR NOTE: from before when episode and transcript in sidebar
         #sprintf("        - episodes/%s.qmd\n", ep$slug),
@@ -477,6 +493,7 @@ update_quarto_yml <- function(all_episodes) {
 
 website:
   title: ""
+  bread-crumbs: false
   description: |
     Analysis of healthcare-related content from Alberta Premier Danielle Smith
     on the "Your Province. Your Premier." radio show.
@@ -497,8 +514,9 @@ website:
     style: floating
     search: true
     contents:
-      - text: "Insights from the Premier\'s radio show"
+      - text: "🏠️ Insights from the Premier\'s radio show"
         file: index.qmd
+      - text: "---"
       - section: "Episodes"
         contents:
 %s
