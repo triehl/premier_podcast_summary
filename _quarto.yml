@@ -52,9 +52,7 @@ format:
     toc: true
     toc-depth: 2
     number-sections: false
-
-execute:
-  freeze: auto
+    html-table-processing: none
 
 lang: en-CA
 

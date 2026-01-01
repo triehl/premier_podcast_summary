@@ -23,7 +23,8 @@ required_packages <- c(
   "fs",
   "cli",
   "glue",
-  "purrr"
+  "purrr",
+  "gt"
 )
 
 # Check and load packages
@@ -517,15 +518,18 @@ render_book <- function() {
     return(invisible(NULL))
   }
 
-  result <- system2("quarto", "render", stdout = TRUE, stderr = TRUE)
+  library(quarto)
+  quarto::quarto_render()
 
-  if (attr(result, "status") %||% 0 == 0) {
-    cli_alert_success("Book rendered to _book/")
-    cli_alert_info("Open _book/index.html in your browser to view")
-  } else {
-    cli_alert_danger("Quarto render failed")
-    cat(result, sep = "\n")
-  }
+  # result <- system2("quarto", "render", stdout = TRUE, stderr = TRUE)
+
+  # if (attr(result, "status") %||% 0 == 0) {
+  #   cli_alert_success("Book rendered to _book/")
+  #   cli_alert_info("Open _book/index.html in your browser to view")
+  # } else {
+  #   cli_alert_danger("Quarto render failed")
+  #   cat(result, sep = "\n")
+  # }
 
   invisible(NULL)
 }
@@ -590,8 +594,8 @@ process_single_episode <- function(episode_number = 1, force = FALSE) {
 # Execute
 # ============================================================================
 
-# For testing purposes
-# For each folder in data/episodes delete all the files except episode.mp3, assemblyai_raw.json, speaker_mapping.json
+# For rerunning transcript analysis
+# Delete all data files except episode.mp3, assemblyai_raw.json, speaker_mapping.json
 clean_episode_folders <- function() {
   data_dir <- file.path(get_project_root(), CONFIG$data_dir)
   episode_dirs <- dir_ls(data_dir, type = "directory")
@@ -603,7 +607,9 @@ clean_episode_folders <- function() {
         c(
           "episode.mp3",
           "assemblyai_raw.json",
-          "speaker_mapping.json"
+          "speaker_mapping.json",
+          "transcript.md",
+          "transcript.json"
         )
     ]
     file_delete(files_to_delete)

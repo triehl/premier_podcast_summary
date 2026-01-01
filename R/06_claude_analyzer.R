@@ -8,14 +8,18 @@
 find_quote_timestamp <- function(quote, raw_transcript) {
   # Get all words with timestamps
   words <- raw_transcript$words
-  if (is.null(words) || length(words) == 0) return(NULL)
+  if (is.null(words) || length(words) == 0) {
+    return(NULL)
+  }
 
   # Normalize quote for matching (lowercase, remove extra spaces/punctuation)
   quote_normalized <- tolower(trimws(quote))
   quote_normalized <- gsub("[.,!?;:'\"()]", "", quote_normalized)
   quote_words <- strsplit(quote_normalized, "\\s+")[[1]]
 
-  if (length(quote_words) < 3) return(NULL)
+  if (length(quote_words) < 3) {
+    return(NULL)
+  }
 
   # Search for the first few words of the quote
   search_words <- quote_words[1:min(6, length(quote_words))]
@@ -28,7 +32,9 @@ find_quote_timestamp <- function(quote, raw_transcript) {
   # Sliding window search
 
   for (i in seq_along(word_texts)) {
-    if (i + length(search_words) - 1 > length(word_texts)) break
+    if (i + length(search_words) - 1 > length(word_texts)) {
+      break
+    }
 
     # Check if this window matches
     window <- word_texts[i:(i + length(search_words) - 1)]
@@ -43,7 +49,9 @@ find_quote_timestamp <- function(quote, raw_transcript) {
   if (length(quote_words) >= 4) {
     search_words <- quote_words[1:4]
     for (i in seq_along(word_texts)) {
-      if (i + 3 > length(word_texts)) break
+      if (i + 3 > length(word_texts)) {
+        break
+      }
       window <- word_texts[i:(i + 3)]
       if (all(window == search_words)) {
         start_ms <- words[[i]]$start %||% 0
@@ -83,13 +91,13 @@ ANALYZER_SYSTEM_PROMPT <- "You are an expert podcast content analyst specializin
 ## Your Task
 Analyze the provided transcript and identify all content related to:
 - Physicians and doctors
-- Healthcare system and health policy particularily if it references physicians or doctors
+- Healthcare system and health policy particularly if it references physicians or doctors
 - Hospitals, clinics, and healthcare facilities
 - Alberta Health Services (AHS)
 - Covenant Health
 - Chartered Surgical Facilities
-- Medical services, access, and wait times particularily if it references physicians or doctors
-- Healthcare funding and reform particularily if it references physicians or doctors
+- Medical services, access, and wait times particularly if it references physicians or doctors
+- Healthcare funding and reform particularly if it references physicians or doctors
 - Emergency services and ambulance
 - Primary care and family medicine
 
@@ -98,8 +106,8 @@ Ignore content related to federal benefits.
 ## Analysis Requirements
 For each healthcare-related segment you identify:
 1. Provide the timestamp range [MM:SS - MM:SS]
-2. Write a concise summary (1-2 sentences)
-3. Extract a notable direct quote if available (use exact words from transcript)
+2. Write a concise summary (1-2 sentences) that avoids political spin
+3. Extract a notable direct quote from Premier Danielle Smith if available (use exact words from transcript)
 4. Provide the exact timestamp when the quote begins (quote_timestamp)
 5. Assign a relevance score: High, Medium, or Low
    - High: Direct policy announcements, specific healthcare initiatives, detailed discussion
@@ -111,7 +119,7 @@ For each healthcare-related segment you identify:
 You must output valid JSON with this exact structure:
 ```json
 {
-  \"overall_summary\": \"2-3 sentence summary of healthcare content in this episode\",
+  \"overall_summary\": \"2-3 brief sentence summary of healthcare content in this episode that avoids political spin\",
   \"healthcare_focus_score\": 75,
   \"total_healthcare_minutes\": 12.5,
   \"highlights\": [

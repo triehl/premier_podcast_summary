@@ -350,7 +350,7 @@ generate_index_page <- function(all_episodes, channel_info) {
   output_path <- file.path(get_project_root(), "index.qmd")
 
   # Build YAML header
-  yaml_header <- '---\ntitle: "Insights from the Premier\'s call-in radio show: *Your Province. Your Premier.*"\ntoc: false\ntbl-colwidths: [25, 65, 10]\n---\n'
+  yaml_header <- '---\ntitle: "Insights from the Premier\'s call-in radio show: *Your Province. Your Premier.*"\ntoc: false\n---\n'
 
   # Build content
   content <- character()
@@ -370,76 +370,125 @@ generate_index_page <- function(all_episodes, channel_info) {
       paste0(slug, ".qmd")
     )))
 
+  # Build episode summary table
   if (nrow(processed_episodes) > 0) {
-    content <- c(
-      content,
-      "| Date | Healthcare highlights | Healthcare content |\n"
-    )
-    content <- c(
-      content,
-      "|------|-----------------------|--------------------|\n"
-    )
+    # Build episode summary dataframe
+    episode_table <- purrr::map_dfr(
+      seq_len(nrow(processed_episodes)),
+      function(i) {
+        ep <- processed_episodes[i, ]
 
-    for (i in seq_len(nrow(processed_episodes))) {
-      ep <- processed_episodes[i, ]
+        analysis_path <- file.path(
+          get_project_root(),
+          CONFIG$data_dir,
+          ep$guid,
+          "analysis.json"
+        )
 
-      # output date
-      date_str <- format(ep$pub_date, "%B %-d, %Y")
-
-      # Try to load analysis for healthcare score
-      analysis_path <- file.path(
-        get_project_root(),
-        CONFIG$data_dir,
-        ep$guid,
-        "analysis.json"
-      )
-
-      # Output the episode summary
-      summary <- if (file.exists(analysis_path)) {
-        analysis <- safe_read_json(analysis_path)
-        if (!is.null(analysis$overall_summary)) {
-          analysis$overall_summary
-        } else {
-          "—"
-        }
-      } else {
-        "—"
-      }
-
-      # Convert the score to a visual indicator
-      score <- if (file.exists(analysis_path)) {
-        analysis <- safe_read_json(analysis_path)
-        if (!is.null(analysis$healthcare_focus_score)) {
-          score_num <- as.numeric(gsub(
-            "%",
-            "",
-            analysis$healthcare_focus_score
-          ))
-          if (score_num <= 15) {
-            "\u26ab\u26aa\u26aa"
-          } else if (score_num <= 25) {
-            "\u26ab\u26ab\u26aa"
+        # Get summary as bullet list (markdown format)
+        summary <- if (file.exists(analysis_path)) {
+          analysis <- safe_read_json(analysis_path)
+          if (!is.null(analysis$overall_summary)) {
+            sentences <- strsplit(
+              analysis$overall_summary,
+              "(?<=\\.)\\s+",
+              perl = TRUE
+            )[[1]]
+            paste(
+              "<ul style=\"padding-left: 1rem;\">",
+              paste0(
+                "<li style=\"margin-bottom: 1rem;\">",
+                sentences,
+                "</li>",
+                collapse = ""
+              ),
+              "</ul>"
+            )
           } else {
-            "\u26ab\u26ab\u26ab"
+            "\u2014"
           }
         } else {
-          "—"
+          "\u2014"
         }
-      } else {
-        "—"
-      }
 
-      content <- c(
-        content,
-        sprintf(
-          "| [%s](episodes/%s.qmd) | %s | %s |\n",
-          date_str,
-          ep$slug,
-          summary,
-          score
+        # Get score as emoji indicator
+        score <- if (file.exists(analysis_path)) {
+          analysis <- safe_read_json(analysis_path)
+          if (!is.null(analysis$healthcare_focus_score)) {
+            score_num <- as.numeric(gsub(
+              "%",
+              "",
+              analysis$healthcare_focus_score
+            ))
+            if (score_num <= 15) {
+              "\u26ab\u26aa\u26aa"
+            } else if (score_num <= 25) {
+              "\u26ab\u26ab\u26aa"
+            } else {
+              "\u26ab\u26ab\u26ab"
+            }
+          } else {
+            "\u2014"
+          }
+        } else {
+          "\u2014"
+        }
+
+        tibble::tibble(
+          date = ep$pub_date,
+          slug = ep$slug,
+          summary = summary,
+          score = score
         )
-      )
-    }
+      }
+    )
+
+    # Save the dataframe for the R code chunk to use
+    saveRDS(
+      episode_table,
+      file.path(get_project_root(), "data", "episode_table.rds")
+    )
+
+    # Add R code chunk for gt() table
+    content <- c(
+      content,
+      '```{r}
+#| echo: false
+#| message: false
+
+library(gt)
+library(dplyr)
+
+episode_table <- readRDS("data/episode_table.rds")
+
+episode_table |>
+  mutate(
+    date_link = paste0("[", trimws(format(date, "%B %e, %Y")), "](episodes/", slug, ".qmd)")
+  ) |>
+  select(
+    Date = date_link,
+    `Healthcare highlights` = summary,
+    `Healthcare content` = score
+  ) |>
+  gt() |>
+  fmt_markdown(columns = everything()) |>
+  cols_width(
+    Date ~ px(100),
+    `Healthcare highlights` ~ px(524),
+    `Healthcare content` ~ px(125)
+  ) |>
+  tab_options(
+    column_labels.font.weight = "bold"
+  ) |>
+  cols_align(align = "left", columns = c(Date, `Healthcare highlights`)) |>
+  cols_align(align = "right", columns = `Healthcare content`) |>
+  opt_interactive(
+    page_size_default = 2,
+    use_sorting = FALSE,
+    )
+```
+'
+    )
   } else {
     content <- c(content, "*No episodes have been processed yet.*\n")
   }
@@ -477,9 +526,6 @@ update_quarto_yml <- function(all_episodes) {
           "            text: %s",
           format(as.Date(substr(ep$slug, 1, 10)), "%B %-d, %Y")
         )
-        #  TREVOR NOTE: from before when episode and transcript in sidebar
-        #sprintf("        - episodes/%s.qmd\n", ep$slug),
-        #sprintf("        - episodes/%s_transcript.qmd", ep$slug)
       )
     }
   )
@@ -531,9 +577,7 @@ format:
     toc: true
     toc-depth: 2
     number-sections: false
-
-execute:
-  freeze: auto
+    html-table-processing: none
 
 lang: en-CA
 ',

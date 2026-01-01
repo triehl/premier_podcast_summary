@@ -1,7 +1,6 @@
 ---
 title: "Insights from the Premier's call-in radio show: *Your Province. Your Premier.*"
 toc: false
-tbl-colwidths: [25, 65, 10]
 ---
 
 # Overview
@@ -16,11 +15,39 @@ tbl-colwidths: [25, 65, 10]
 
 # Episodes
 
-| Date | Healthcare highlights | Healthcare content |
-|------|-----------------------|--------------------|
-| [December 20, 2025](episodes/2025-12-20-your-province-your-premier-12202025.qmd) | This episode primarily focused on constitutional reforms and citizen petitions, with healthcare discussed as one of several policy areas. Premier Smith addressed healthcare system improvements planned for 2026, including physician recruitment, surgical backlog reduction, and patient experience enhancement. Healthcare received moderate attention compared to other topics like education funding and federal-provincial relations. | ⚫⚪⚪ |
-| [December 6, 2025](episodes/2025-12-06-your-province-your-premier-12062025.qmd) | This episode contains substantial healthcare discussion, primarily focused on chartered surgical facilities, surgical backlogs, and healthcare system pressures from immigration. Premier Smith discusses terminating AHS contracts with facilities connected to Sam Rach, transitioning to activity-based funding, and announcing 50,000 additional surgeries to clear backlogs. She also addresses healthcare system strain from federal immigration policy and responds to caller criticism about healthcare promises. | ⚫⚫⚪ |
-| [November 22, 2025](episodes/2025-11-22-your-province-your-premier-11222025.qmd) | This episode features extensive discussion of healthcare labor relations, with the Premier announcing a tentative agreement reached with 16,000 healthcare workers just 18 minutes after the strike deadline. The Premier also addresses healthcare staffing strategy, defends the expansion of chartered surgical facilities and dual practice for physicians, and responds to criticisms about privatization in the healthcare system. | ⚫⚫⚫ |
-| [November 8, 2025](episodes/2025-11-08-your-province-your-premier-11082025.qmd) | This episode features Premier Smith discussing healthcare system management reforms, including the transition from centralized AHS management to focused ministerial oversight. She defends changes to COVID vaccine distribution, addresses concerns about healthcare worker wages and potential strikes, and discusses challenges in the healthcare system including EMS response times, surgical capacity, and continuing care bed shortages. | ⚫⚫⚫ |
-| [October 25, 2025](episodes/2025-10-25-your-province-your-premier-10252025.qmd) | This episode focused primarily on the teachers' strike and education issues, with minimal healthcare content. The only healthcare-related discussion involved a brief mention of mental health professionals in schools and a short exchange about paramedic wage negotiations. | ⚫⚪⚪ |
+```{r}
+#| echo: false
+#| message: false
+
+library(gt)
+library(dplyr)
+
+episode_table <- readRDS("data/episode_table.rds")
+
+episode_table |>
+  mutate(
+    date_link = paste0("[", trimws(format(date, "%B %e, %Y")), "](episodes/", slug, ".qmd)")
+  ) |>
+  select(
+    Date = date_link,
+    `Healthcare highlights` = summary,
+    `Healthcare content` = score
+  ) |>
+  gt() |>
+  fmt_markdown(columns = everything()) |>
+  cols_width(
+    Date ~ px(100),
+    `Healthcare highlights` ~ px(524),
+    `Healthcare content` ~ px(125)
+  ) |>
+  tab_options(
+    column_labels.font.weight = "bold"
+  ) |>
+  cols_align(align = "left", columns = c(Date, `Healthcare highlights`)) |>
+  cols_align(align = "right", columns = `Healthcare content`) |>
+  opt_interactive(
+    page_size_default = 2,
+    use_sorting = FALSE,
+    )
+```
 
