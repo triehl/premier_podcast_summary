@@ -218,6 +218,7 @@ ANALYZER_SYSTEM_PROMPT <- "You are an expert podcast content analyst specializin
 ## Your Task
 Analyze the provided transcript and identify all content spoken by Premier Danielle Smith related to:
 - Physicians and doctors
+- Alberta Medical Association (AMA)
 - Healthcare system and health policy especially if it references physicians or doctors
 - Hospitals, clinics, and healthcare facilities
 - Alberta Health Services (AHS)

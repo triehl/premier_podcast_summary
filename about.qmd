@@ -1,5 +1,6 @@
 ---
 title: "About This Project"
+toc: false
 ---
 
 # Overview
@@ -33,12 +34,14 @@ The episode transcript is computer-generated from the radio show audio recording
 
 The analysis focuses on content related to:
 
-- Physician and doctor-related discussions
-- Healthcare system and policy
+- Physicians and doctors
+- Alberta Medical Association (AMA)
+- Healthcare system and health policy especially if it references physicians or doctors
 - Hospitals, clinics, and healthcare facilities
-- Alberta Health Services (AHS) and Covenant Health
-- Medical services, access, and wait times
-- Healthcare funding and reform
-- Patient care and outcomes
+- Alberta Health Services (AHS)
+- Covenant Health
+- Chartered Surgical Facilities
+- Medical services, access, and wait times especially if it references physicians or doctors
+- Healthcare funding and reform especially if it references physicians or doctors
 - Primary care and family medicine
-- Emergency services
+- Emergency services and ambulance
