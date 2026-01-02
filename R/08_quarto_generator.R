@@ -496,9 +496,9 @@ generate_index_page <- function(all_episodes, channel_info) {
               "",
               analysis$healthcare_focus_score
             ))
-            if (score_num <= 15) {
+            if (score_num <= 10) {
               "\u26ab\u26aa\u26aa"
-            } else if (score_num <= 25) {
+            } else if (score_num <= 20) {
               "\u26ab\u26ab\u26aa"
             } else {
               "\u26ab\u26ab\u26ab"
