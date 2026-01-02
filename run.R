@@ -599,6 +599,7 @@ process_single_episode <- function(episode_number = 1, force = FALSE) {
 clean_episode_folders <- function() {
   data_dir <- file.path(get_project_root(), CONFIG$data_dir)
   episode_dirs <- dir_ls(data_dir, type = "directory")
+
   for (episode_dir in episode_dirs) {
     # Delete files except the ones to keep
     files <- dir_ls(episode_dir, type = "file")
@@ -608,6 +609,7 @@ clean_episode_folders <- function() {
           "episode.mp3",
           "assemblyai_raw.json",
           "speaker_mapping.json",
+          #"analysis.json",
           "transcript.md",
           "transcript.json"
         )
@@ -651,7 +653,7 @@ reset_processing_status <- function() {
 #
 # reset_processing_status()
 
-run_pipeline(5, force_reprocess = TRUE, skip_render = FALSE)
+run_pipeline(CONFIG$max_episodes, force_reprocess = TRUE, skip_render = FALSE)
 
 
 # Run the pipeline if this script is executed directly
@@ -660,7 +662,7 @@ files_to_zip <- dir_ls(".", recurse = TRUE, type = "file") |>
   discard(~ str_detect(path_file(.x), "^episode\\.mp3$")) |>
   discard(~ str_detect(.x, "data/episodes/.*\\.md$"))
 
-zip::zip("current_folder.zip", files = files_to_zip)
+zip::zip("output.zip", files = files_to_zip)
 cli_alert_success(
   "Zipped current folder to current_folder.zip (episode.mp3 and *.md files in episodes excluded)"
 )

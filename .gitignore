@@ -23,9 +23,6 @@ Thumbs.db
 # Logs
 *.log
 
-# Archives
-*.zip
-
 # Generated episode pages
 episodes/
 

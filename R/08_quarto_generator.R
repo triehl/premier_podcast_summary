@@ -208,16 +208,90 @@ format_highlight_block <- function(
     transcript_slug <- paste0(episode_metadata$slug, "_transcript")
     anchor <- create_transcript_anchor(h$timestamp_start, transcript_md)
     if (!is.null(anchor)) {
-      lines <- c(
-        lines,
-        sprintf("[View in transcript](%s.qmd#%s)\n\n", transcript_slug, anchor)
-      )
+      # original approach to link to section rather than quoted text
+      # lines <- c(
+      #   lines,
+      #   sprintf("[View in transcript](%s.qmd#%s)", transcript_slug, anchor)
+      # )
+
+      # Add text fragment link to highlight quote in browser
+      if (!is.null(h$quote) && nchar(h$quote) > 0) {
+        # Find exact quote with original case from transcript (text fragments are case-sensitive)
+        exact_quote <- find_exact_quote_in_transcript(h$quote, transcript_md)
+        quote_for_link <- if (!is.null(exact_quote)) exact_quote else h$quote
+
+        encoded_quote <- utils::URLencode(quote_for_link, reserved = TRUE)
+        lines <- c(
+          lines,
+          sprintf(
+            "<a href=\"%s.html#:~:text=%s\">View quote in full transcript</a>",
+            transcript_slug,
+            encoded_quote
+          )
+        )
+      }
+
+      lines <- c(lines, "\n\n")
     }
   }
 
   lines <- c(lines, "---\n\n")
 
   paste(lines, collapse = "")
+}
+
+#' Find exact quote text in transcript with original case
+#' @param quote The quote to find (case may differ)
+#' @param transcript_md The full transcript markdown text
+#' @return The exact text from transcript with original case, or NULL if not found
+find_exact_quote_in_transcript <- function(quote, transcript_md) {
+  if (is.null(quote) || is.null(transcript_md)) {
+    return(NULL)
+  }
+
+  # Clean quote boundaries (helps when quote is subset of longer sentence)
+  quote_cleaned <- trimws(quote)
+  quote_cleaned <- sub("[.!?]+$", "", quote_cleaned)
+
+  # Try cleaned quote first (case-insensitive search)
+  quote_lower <- tolower(quote_cleaned)
+  transcript_lower <- tolower(transcript_md)
+
+  match_pos <- regexpr(quote_lower, transcript_lower, fixed = TRUE)
+
+  if (match_pos > 0) {
+    # Extract the exact text from original transcript with original case
+    match_length <- attr(match_pos, "match.length")
+    return(substr(transcript_md, match_pos, match_pos + match_length - 1))
+  }
+
+  # Fallback: try original quote (in case cleaning removed too much)
+  quote_lower <- tolower(quote)
+
+  match_pos <- regexpr(quote_lower, transcript_lower, fixed = TRUE)
+
+  if (match_pos > 0) {
+    # Extract the exact text from original transcript with original case
+    match_length <- attr(match_pos, "match.length")
+    return(substr(transcript_md, match_pos, match_pos + match_length - 1))
+  }
+
+  # Fallback: try finding a unique phrase from middle of quote
+  # (Claude may have removed words from the beginning)
+  words <- strsplit(trimws(quote), "\\s+")[[1]]
+  if (length(words) >= 8) {
+    # Skip first 3 words, take next 8 words
+    phrase <- paste(words[4:min(11, length(words))], collapse = " ")
+    phrase_lower <- tolower(phrase)
+    phrase_pos <- regexpr(phrase_lower, transcript_lower, fixed = TRUE)
+
+    if (phrase_pos > 0) {
+      phrase_length <- attr(phrase_pos, "match.length")
+      return(substr(transcript_md, phrase_pos, phrase_pos + phrase_length - 1))
+    }
+  }
+
+  NULL
 }
 
 #' Create anchor ID for transcript section from timestamp

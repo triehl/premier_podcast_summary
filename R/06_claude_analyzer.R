@@ -236,7 +236,7 @@ IMPORTANT: Do not include quotes from callers or the host. Quotes must be from P
 For each healthcare-related segment you identify:
 1. Provide the timestamp range [MM:SS - MM:SS]
 2. Write a concise summary (1-2 sentences) that avoids political spin
-3. Extract a notable direct quote from Premier Danielle Smith if available (use exact words from transcript)
+3. Extract a notable direct quote from Premier Danielle Smith, if available. Use only use exact words from transcript when extracting a quote even if they contain errors.
 4. Provide the exact timestamp when the quote begins (quote_timestamp)
 5. Assign a relevance score: High, Medium, or Low
    - High: Direct policy announcements, specific healthcare initiatives, detailed discussion

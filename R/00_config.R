@@ -6,7 +6,7 @@ CONFIG <- list(
   rss_url = "https://feeds.megaphone.fm/CORU5449522127",
 
   # Processing limits
-  max_episodes = 5, # Initially process last 5 episodes
+  max_episodes = 6, # Initially process last 5 episodes
 
   # API endpoints
   assemblyai_base_url = "https://api.assemblyai.com/v2",
@@ -24,55 +24,6 @@ CONFIG <- list(
   # AssemblyAI polling settings
   assemblyai_poll_interval = 5, # seconds between status checks
   assemblyai_max_poll_attempts = 360, # max 30 minutes wait
-
-  # Healthcare keywords for content analysis
-  healthcare_keywords = c(
-    "physician",
-    "physicians",
-    "doctor",
-    "doctors",
-    "healthcare",
-    "health care",
-    "health-care",
-    "hospital",
-    "hospitals",
-    "clinic",
-    "clinics",
-    "medical",
-    "medicine",
-    "patient",
-    "patients",
-    "nurse",
-    "nurses",
-    "nursing",
-    "surgery",
-    "surgical",
-    "surgeon",
-    "emergency room",
-    "ER",
-    "emergency department",
-    "AHS",
-    "Alberta Health Services",
-    "Covenant Health",
-    "Covenant",
-    "Alberta Health",
-    "health minister",
-    "primary care",
-    "family doctor",
-    "GP",
-    "specialist",
-    "specialists",
-    "wait time",
-    "wait times",
-    "waitlist",
-    "health policy",
-    "healthcare policy",
-    "health funding",
-    "healthcare funding",
-    "health reform",
-    "healthcare reform",
-    "patient experience"
-  ),
 
   # Audio clip settings
   max_clips_per_episode = 10,
