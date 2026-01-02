@@ -41,7 +41,7 @@ title: "%s"
   # add disclaimer
   content <- c(
     content,
-    ":::{.callout-note appearance=\"minimal\"}\n***Note:** The episode transcripts are computer generated from the [radio show audio files](https://globalnews.ca/edmonton/program/your-province-your-premier){target=\"_blank\"}. As a result, some acronyms or text may not be transcribed correctly or the speaker may be misidentified. Confirm the actual content from the audio file before quoting from an episode.*\n:::\n\n"
+    ":::{.callout-note appearance=\"minimal\"}\n***Note:** The episode transcripts are computer-generated from the [radio show audio recordings](https://globalnews.ca/edmonton/program/your-province-your-premier){target=\"_blank\"}. As a result, some acronyms or text may not be transcribed correctly or the speaker may be misidentified. Confirm the actual content from the audio file before quoting from an episode.*\n:::\n\n"
   )
 
   if (
@@ -327,7 +327,7 @@ generate_transcript_page <- function(
   # add disclaimer
   content <- c(
     content,
-    ":::{.callout-note appearance=\"minimal\"}\n***Note:** The episode transcripts are computer generated from the [radio show audio files](https://globalnews.ca/edmonton/program/your-province-your-premier){target=\"_blank\"}. As a result, some acronyms or text may not be transcribed correctly or the speaker may be misidentified. Confirm the actual content from the audio file before quoting from an episode.*\n:::\n\n"
+    ":::{.callout-note appearance=\"minimal\"}\n***Note:** The episode transcripts are computer-generated from the [radio show audio recordings](https://globalnews.ca/edmonton/program/your-province-your-premier){target=\"_blank\"}. As a result, some acronyms or text may not be transcribed correctly or the speaker may be misidentified. Confirm the actual content from the audio file before quoting from an episode.*\n:::\n\n"
   )
 
   # break and transcript contents
@@ -357,7 +357,7 @@ generate_index_page <- function(all_episodes, channel_info) {
 
   # Podcast description
 
-  content <- "# Overview\n\n - **Description:** This app analyzes the [Premier's  call-in radio show](https://globalnews.ca/edmonton/program/your-province-your-premier){target=\"_blank\"} to identify insights related to physicians and the healthcare system.\n\n - **Goal:** Assist PC&E staff identify comments and policy statements made by the Premier which may impact the AMA without having to listen to the entire show.\n\n:::{.callout-note appearance=\"minimal\"}\n***Note:** The episode transcripts are computer generated from the radio show audio files. As a result, some acronyms or text may not be transcribed correctly or the speaker may be misidentified. Confirm the actual content from the audio file before quoting from an episode.*\n:::\n\n"
+  content <- "# Overview\n\n - **Description:** This app analyzes the [Premier's call-in radio show](https://globalnews.ca/edmonton/program/your-province-your-premier){target=\"_blank\"} audio recordings to identify insights related to physicians and the healthcare system.\n\n - **Goal:** Assist PC&E staff identify comments and policy statements made by the Premier which may impact the AMA without having to listen to the entire show.\n\n:::{.callout-note appearance=\"minimal\"}\n***Note:** The episode transcripts are computer-generated from the radio show audio recordings. As a result, some acronyms or text may not be transcribed correctly or the speaker may be misidentified. Confirm the actual content from the audio file before quoting from an episode.*\n:::\n\n"
 
   # Episode list
   content <- c(content, "# Episodes\n\n")
@@ -463,7 +463,7 @@ episode_table <- readRDS("data/episode_table.rds")
 
 episode_table |>
   mutate(
-    date_link = paste0("[", trimws(format(date, "%B %e, %Y")), "](episodes/", slug, ".qmd)")
+    date_link = paste0("[", trimws(format(date, "%B %e, %Y")), "](episodes/", slug, ".html)")
   ) |>
   select(
     Date = date_link,

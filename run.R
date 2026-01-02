@@ -624,8 +624,30 @@ clean_episode_folders <- function() {
   }
 }
 
+# write a function that searches cache/episodes_cache.json for episodes with status "complete" and resets their status to "transcribed"
+reset_processing_status <- function() {
+  # clean out cached files
+  clean_episode_folders()
+
+  cache_df <- load_episodes_cache()
+  completed_episodes <- cache_df |>
+    dplyr::filter(status == EPISODE_STATUS$complete)
+  for (i in seq_len(nrow(completed_episodes))) {
+    episode <- completed_episodes[i, ]
+    cli_alert_info("Resetting episode {episode$guid} status")
+    cache_df <- update_episode_status(
+      episode$guid,
+      EPISODE_STATUS$formatted,
+      cache_df
+    )
+  }
+}
+
+#---------------------------------------------------------------------------
+
 # For testing
-# clean_episode_folders()
+#
+# reset_processing_status()
 
 run_pipeline(5, force_reprocess = TRUE, skip_render = FALSE)
 

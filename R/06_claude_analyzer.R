@@ -63,6 +63,72 @@ find_quote_timestamp <- function(quote, raw_transcript) {
   NULL
 }
 
+#' Find the timestamp where a quote ends using AssemblyAI word data
+#' @param quote The quote text to find
+#' @param raw_transcript Raw AssemblyAI response with word-level timestamps
+#' @return Timestamp string in MM:SS format, or NULL if not found
+find_quote_end_timestamp <- function(quote, raw_transcript) {
+  # Get all words with timestamps
+  words <- raw_transcript$words
+  if (is.null(words) || length(words) == 0) {
+    return(NULL)
+  }
+
+  # Normalize quote for matching
+  quote_normalized <- tolower(trimws(quote))
+  quote_normalized <- gsub("[.,!?;:'\"()]", "", quote_normalized)
+  quote_words <- strsplit(quote_normalized, "\\s+")[[1]]
+
+  if (length(quote_words) < 3) {
+    return(NULL)
+  }
+
+  # Build word text array for searching
+  word_texts <- tolower(sapply(words, function(w) {
+    gsub("[.,!?;:'\"()]", "", w$text %||% "")
+  }))
+
+  # First find the start of the quote
+  search_start <- quote_words[1:min(6, length(quote_words))]
+  start_idx <- NULL
+
+  for (i in seq_along(word_texts)) {
+    if (i + length(search_start) - 1 > length(word_texts)) {
+      break
+    }
+    window <- word_texts[i:(i + length(search_start) - 1)]
+    if (all(window == search_start)) {
+      start_idx <- i
+      break
+    }
+  }
+
+  if (is.null(start_idx)) {
+    return(NULL)
+  }
+
+  # Now search for the last few words, starting from where we found the quote
+  search_end <- quote_words[max(1, length(quote_words) - 5):length(quote_words)]
+
+  # Search within a reasonable window (quote length + buffer)
+  max_search <- min(start_idx + length(quote_words) + 20, length(word_texts))
+
+  for (i in start_idx:max_search) {
+    if (i + length(search_end) - 1 > length(word_texts)) {
+      break
+    }
+    window <- word_texts[i:(i + length(search_end) - 1)]
+    if (all(window == search_end)) {
+      # Found it - return the END timestamp of the last word
+      end_idx <- i + length(search_end) - 1
+      end_ms <- words[[end_idx]]$end %||% 0
+      return(ms_to_timestamp(end_ms))
+    }
+  }
+
+  NULL
+}
+
 #' Create Claude API request builder
 #' @return httr2_request object
 claude_request <- function() {
@@ -89,19 +155,21 @@ claude_request <- function() {
 ANALYZER_SYSTEM_PROMPT <- "You are an expert podcast content analyst specializing in healthcare policy. You are analyzing transcripts from 'Your Province. Your Premier.' - a podcast featuring Alberta Premier Danielle Smith discussing provincial issues.
 
 ## Your Task
-Analyze the provided transcript and identify all content related to:
+Analyze the provided transcript and identify all content from Premier Danielle Smith related to:
 - Physicians and doctors
-- Healthcare system and health policy particularly if it references physicians or doctors
+- Healthcare system and health policy especially if it references physicians or doctors
 - Hospitals, clinics, and healthcare facilities
 - Alberta Health Services (AHS)
 - Covenant Health
 - Chartered Surgical Facilities
-- Medical services, access, and wait times particularly if it references physicians or doctors
-- Healthcare funding and reform particularly if it references physicians or doctors
+- Medical services, access, and wait times especially if it references physicians or doctors
+- Healthcare funding and reform especially if it references physicians or doctors
 - Emergency services and ambulance
 - Primary care and family medicine
 
-Ignore content related to federal benefits.
+Content where Premier Danielle Smith mentions physicians or doctors is especially important.
+
+Ensure quotes are only from Premier Danielle Smith.
 
 ## Analysis Requirements
 For each healthcare-related segment you identify:
@@ -119,7 +187,7 @@ For each healthcare-related segment you identify:
 You must output valid JSON with this exact structure:
 ```json
 {
-  \"overall_summary\": \"2-3 brief sentence summary of healthcare content in this episode that avoids political spin\",
+  \"overall_summary\": \"write a very brief 2-3 sentence summary of any discussion on healthcare or physicians in the episode. Avoid political spin. Don't get into specific details. Don't summarize non-healthcare content. Don't talk about where discussions occur in the episode (e.g., at the end). Don't quote specific numbers like '18-minute healthcare workers strike' nor '16,000 AOPE members'.\",
   \"healthcare_focus_score\": 75,
   \"total_healthcare_minutes\": 12.5,
   \"highlights\": [
@@ -314,15 +382,33 @@ analyze_episode <- function(episode_dir, episode_metadata, force = FALSE) {
       for (i in seq_along(analysis$highlights)) {
         quote <- analysis$highlights[[i]]$quote
         if (!is.null(quote) && nchar(quote) > 20) {
+          # Find accurate start timestamp
           accurate_timestamp <- find_quote_timestamp(quote, raw_transcript)
           if (!is.null(accurate_timestamp)) {
             analysis$highlights[[i]]$quote_timestamp <- accurate_timestamp
             log_msg(
               "INFO",
-              "Found accurate timestamp for quote {i}: {accurate_timestamp}"
+              "Found accurate start timestamp for quote {i}: {accurate_timestamp}"
             )
           } else {
-            log_msg("WARN", "Could not find timestamp for quote {i}")
+            log_msg("WARN", "Could not find start timestamp for quote {i}")
+          }
+
+          # Find accurate end timestamp
+          accurate_end_timestamp <- find_quote_end_timestamp(
+            quote,
+            raw_transcript
+          )
+          if (!is.null(accurate_end_timestamp)) {
+            analysis$highlights[[
+              i
+            ]]$quote_end_timestamp <- accurate_end_timestamp
+            log_msg(
+              "INFO",
+              "Found accurate end timestamp for quote {i}: {accurate_end_timestamp}"
+            )
+          } else {
+            log_msg("WARN", "Could not find end timestamp for quote {i}")
           }
         }
       }

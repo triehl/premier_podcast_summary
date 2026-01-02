@@ -4,13 +4,13 @@ title: "About This Project"
 
 # Overview
 
-- **Description:** This app analyzes the [Premier's call-in radio show](https://globalnews.ca/edmonton/program/your-province-your-premier){target=\"_blank\"} to identify insights related to physicians and the healthcare system
+- **Description:** This app analyzes the [Premier's call-in radio show](https://globalnews.ca/edmonton/program/your-province-your-premier){target=\"_blank\"} audio recordings to identify insights related to physicians and the healthcare system
 
 - **Goal:** Assist PC&E staff identify comments and policy statements made by the Premier which may impact the AMA without having to listen to the entire show
 
 # User responsibilities
 
-The episode transcript is computer generated from the radio show audio files. As a result, some acronyms or text may not be transcribed correctly or speakers may be misidentified. **The user is responsible for confirming the actual content from the audio file before quoting from an episode.**
+The episode transcript is computer-generated from the radio show audio recordings. As a result, some acronyms or text may not be transcribed correctly or speakers may be misidentified. **The user is responsible for confirming the actual content from the audio file before quoting from an episode.**
 
 # How It Works
 

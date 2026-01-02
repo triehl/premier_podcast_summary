@@ -76,11 +76,9 @@ CONFIG <- list(
 
   # Audio clip settings
   max_clips_per_episode = 10,
-  clip_buffer_before = 1, # seconds before highlight
-  clip_buffer_after = 3, # seconds after highlight
-  min_clip_duration = 10, # minimum clip length in seconds
-  max_clip_duration = 60, # maximum clip length in seconds
-  max_utterance_duration = 15000, # maximum time a single person can be speaking before a new timestamp created
+  clip_buffer_before = 2, # seconds before highlight
+  clip_buffer_after = 2, # seconds after highlight
+  max_utterance_duration = 15000, # maximum time a single person can be speaking before a new timestamp created (15 sec)
 
   # File paths (relative to project root)
   data_dir = "data/episodes",

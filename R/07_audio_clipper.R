@@ -45,10 +45,6 @@ if (!file.exists(input_file)) {
 actual_start <- max(0, start_seconds - buffer_before)
 actual_duration <- duration_seconds + buffer_before + buffer_after
 
-# Apply min/max duration limits
-actual_duration <- max(CONFIG$min_clip_duration, actual_duration)
-actual_duration <- min(CONFIG$max_clip_duration, actual_duration)
-
 # Ensure output directory exists
 ensure_dir(dirname(output_file))
 
@@ -168,7 +164,12 @@ results <- purrr::map_dfr(seq_along(highlights), function(i) {
   })
 
   end_seconds <- tryCatch({
-    timestamp_to_seconds(h$timestamp_end)
+    # Use quote_end_timestamp if available (exact end of quote)
+    if (!is.null(h$quote_end_timestamp) && nchar(h$quote_end_timestamp) > 0) {
+      timestamp_to_seconds(h$quote_end_timestamp)
+    } else {
+      timestamp_to_seconds(h$timestamp_end)
+    }
   }, error = function(e) {
     log_msg("WARN", "Invalid end timestamp: {h$timestamp_end}")
     NA_real_
