@@ -181,9 +181,11 @@ format_highlight_block <- function(
 
   # Audio clip if available
   if (!is.null(clips_manifest) && !is.null(clips_manifest$clips)) {
-    # Find matching clip by timestamp
+    # Find matching clip by timestamp and summary
     matching_clip <- purrr::detect(clips_manifest$clips, function(c) {
-      c$timestamp_start == h$timestamp_start && isTRUE(c$success)
+      c$timestamp_start == h$timestamp_start &&
+        c$summary == h$summary &&
+        isTRUE(c$success)
     })
 
     if (!is.null(matching_clip) && !is.null(matching_clip$clip_path)) {

@@ -630,8 +630,10 @@ reset_processing_status <- function() {
   clean_episode_folders()
 
   cache_df <- load_episodes_cache()
+
   completed_episodes <- cache_df |>
     dplyr::filter(status == EPISODE_STATUS$complete)
+
   for (i in seq_len(nrow(completed_episodes))) {
     episode <- completed_episodes[i, ]
     cli_alert_info("Resetting episode {episode$guid} status")

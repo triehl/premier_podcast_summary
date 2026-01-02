@@ -1,11 +1,26 @@
 # Claude Healthcare Content Analyzer for Premier Podcast Summary
 # Uses Claude API to identify healthcare-related content in transcripts
 
+#' Convert timestamp string to milliseconds
+#' @param timestamp Timestamp in MM:SS or HH:MM:SS format
+#' @return Milliseconds
+timestamp_to_ms <- function(timestamp) {
+  parts <- as.numeric(strsplit(timestamp, ":")[[1]])
+  if (length(parts) == 2) {
+    (parts[1] * 60 + parts[2]) * 1000
+  } else if (length(parts) == 3) {
+    (parts[1] * 3600 + parts[2] * 60 + parts[3]) * 1000
+  } else {
+    0
+  }
+}
+
 #' Find the timestamp where a quote begins using AssemblyAI word data
 #' @param quote The quote text to find
 #' @param raw_transcript Raw AssemblyAI response with word-level timestamps
+#' @param hint_timestamp Optional timestamp hint to search near (MM:SS format)
 #' @return Timestamp string in MM:SS format, or NULL if not found
-find_quote_timestamp <- function(quote, raw_transcript) {
+find_quote_timestamp <- function(quote, raw_transcript, hint_timestamp = NULL) {
   # Get all words with timestamps
   words <- raw_transcript$words
   if (is.null(words) || length(words) == 0) {
@@ -29,9 +44,29 @@ find_quote_timestamp <- function(quote, raw_transcript) {
     gsub("[.,!?;:'\"()]", "", w$text %||% "")
   }))
 
-  # Sliding window search
+  # Determine search range based on hint_timestamp
+  if (!is.null(hint_timestamp)) {
+    hint_ms <- timestamp_to_ms(hint_timestamp)
+    # Search within 5 minutes of the hint timestamp
+    range_ms <- 5 * 60 * 1000
+    valid_indices <- which(sapply(words, function(w) {
+      word_ms <- w$start %||% 0
+      abs(word_ms - hint_ms) < range_ms
+    }))
+    if (length(valid_indices) > 0) {
+      start_search <- min(valid_indices)
+      end_search <- max(valid_indices)
+    } else {
+      start_search <- 1
+      end_search <- length(word_texts)
+    }
+  } else {
+    start_search <- 1
+    end_search <- length(word_texts)
+  }
 
-  for (i in seq_along(word_texts)) {
+  # Sliding window search within range
+  for (i in start_search:end_search) {
     if (i + length(search_words) - 1 > length(word_texts)) {
       break
     }
@@ -48,7 +83,7 @@ find_quote_timestamp <- function(quote, raw_transcript) {
   # Fallback: try partial match with first 4 words
   if (length(quote_words) >= 4) {
     search_words <- quote_words[1:4]
-    for (i in seq_along(word_texts)) {
+    for (i in start_search:end_search) {
       if (i + 3 > length(word_texts)) {
         break
       }
@@ -66,8 +101,13 @@ find_quote_timestamp <- function(quote, raw_transcript) {
 #' Find the timestamp where a quote ends using AssemblyAI word data
 #' @param quote The quote text to find
 #' @param raw_transcript Raw AssemblyAI response with word-level timestamps
+#' @param hint_timestamp Optional timestamp hint to search near (MM:SS format)
 #' @return Timestamp string in MM:SS format, or NULL if not found
-find_quote_end_timestamp <- function(quote, raw_transcript) {
+find_quote_end_timestamp <- function(
+  quote,
+  raw_transcript,
+  hint_timestamp = NULL
+) {
   # Get all words with timestamps
   words <- raw_transcript$words
   if (is.null(words) || length(words) == 0) {
@@ -88,11 +128,32 @@ find_quote_end_timestamp <- function(quote, raw_transcript) {
     gsub("[.,!?;:'\"()]", "", w$text %||% "")
   }))
 
-  # First find the start of the quote
+  # Determine search range based on hint_timestamp
+  if (!is.null(hint_timestamp)) {
+    hint_ms <- timestamp_to_ms(hint_timestamp)
+    # Search within 5 minutes of the hint timestamp
+    range_ms <- 5 * 60 * 1000
+    valid_indices <- which(sapply(words, function(w) {
+      word_ms <- w$start %||% 0
+      abs(word_ms - hint_ms) < range_ms
+    }))
+    if (length(valid_indices) > 0) {
+      start_search <- min(valid_indices)
+      end_search <- max(valid_indices)
+    } else {
+      start_search <- 1
+      end_search <- length(word_texts)
+    }
+  } else {
+    start_search <- 1
+    end_search <- length(word_texts)
+  }
+
+  # First find the start of the quote within the search range
   search_start <- quote_words[1:min(6, length(quote_words))]
   start_idx <- NULL
 
-  for (i in seq_along(word_texts)) {
+  for (i in start_search:end_search) {
     if (i + length(search_start) - 1 > length(word_texts)) {
       break
     }
@@ -155,7 +216,7 @@ claude_request <- function() {
 ANALYZER_SYSTEM_PROMPT <- "You are an expert podcast content analyst specializing in healthcare policy. You are analyzing transcripts from 'Your Province. Your Premier.' - a podcast featuring Alberta Premier Danielle Smith discussing provincial issues.
 
 ## Your Task
-Analyze the provided transcript and identify all content from Premier Danielle Smith related to:
+Analyze the provided transcript and identify all content spoken by Premier Danielle Smith related to:
 - Physicians and doctors
 - Healthcare system and health policy especially if it references physicians or doctors
 - Hospitals, clinics, and healthcare facilities
@@ -169,7 +230,7 @@ Analyze the provided transcript and identify all content from Premier Danielle S
 
 Content where Premier Danielle Smith mentions physicians or doctors is especially important.
 
-Ensure quotes are only from Premier Danielle Smith.
+IMPORTANT: Do not include quotes from callers or the host. Quotes must be from Premier Danielle Smith only.
 
 ## Analysis Requirements
 For each healthcare-related segment you identify:
@@ -381,9 +442,14 @@ analyze_episode <- function(episode_dir, episode_metadata, force = FALSE) {
 
       for (i in seq_along(analysis$highlights)) {
         quote <- analysis$highlights[[i]]$quote
+        hint_ts <- analysis$highlights[[i]]$timestamp_start
         if (!is.null(quote) && nchar(quote) > 20) {
-          # Find accurate start timestamp
-          accurate_timestamp <- find_quote_timestamp(quote, raw_transcript)
+          # Find accurate start timestamp (use timestamp_start as hint)
+          accurate_timestamp <- find_quote_timestamp(
+            quote,
+            raw_transcript,
+            hint_timestamp = hint_ts
+          )
           if (!is.null(accurate_timestamp)) {
             analysis$highlights[[i]]$quote_timestamp <- accurate_timestamp
             log_msg(
@@ -394,10 +460,11 @@ analyze_episode <- function(episode_dir, episode_metadata, force = FALSE) {
             log_msg("WARN", "Could not find start timestamp for quote {i}")
           }
 
-          # Find accurate end timestamp
+          # Find accurate end timestamp (use timestamp_start as hint)
           accurate_end_timestamp <- find_quote_end_timestamp(
             quote,
-            raw_transcript
+            raw_transcript,
+            hint_timestamp = hint_ts
           )
           if (!is.null(accurate_end_timestamp)) {
             analysis$highlights[[
