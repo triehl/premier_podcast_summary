@@ -122,18 +122,18 @@ title: "%s"
   )
 
   # Duration info
-  if (
-    !is.null(episode_metadata$duration_seconds) &&
-      !is.na(episode_metadata$duration_seconds)
-  ) {
-    content <- c(
-      content,
-      sprintf(
-        "\n---\n\n*Episode Duration: %s*\n",
-        format_duration(episode_metadata$duration_seconds)
-      )
-    )
-  }
+  # if (
+  #   !is.null(episode_metadata$duration_seconds) &&
+  #     !is.na(episode_metadata$duration_seconds)
+  # ) {
+  #   content <- c(
+  #     content,
+  #     sprintf(
+  #       "\n---\n\n*Episode Duration: %s*\n",
+  #       format_duration(episode_metadata$duration_seconds)
+  #     )
+  #   )
+  # }
 
   # Write file
   ensure_dir(dirname(output_path))
@@ -235,7 +235,7 @@ format_highlight_block <- function(
     }
   }
 
-  lines <- c(lines, "---\n\n")
+  # lines <- c(lines, "---\n\n")
 
   paste(lines, collapse = "")
 }
@@ -407,7 +407,7 @@ generate_transcript_page <- function(
   )
 
   # break and transcript contents
-  content <- c(content, "---\n\n")
+  # content <- c(content, "---\n\n")
   content <- c(content, transcript_md)
 
   # Write file
