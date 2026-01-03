@@ -237,7 +237,7 @@ IMPORTANT: Do not include quotes from callers or the host. Quotes must be from P
 For each healthcare-related segment you identify:
 1. Provide the timestamp range [MM:SS - MM:SS]
 2. Write a concise summary (1-2 sentences) that avoids political spin
-3. Extract a notable direct quote from Premier Danielle Smith, if available. Use only use exact words from transcript when extracting a quote even if they contain errors.
+3. Extract notable direct quotes from Premier Danielle Smith following the QUOTE EXTRACTION RULES below.
 4. Provide the exact timestamp when the quote begins (quote_timestamp)
 5. Assign a relevance score: High, Medium, or Low
    - High: Direct policy announcements, specific healthcare initiatives, detailed discussion
@@ -245,11 +245,35 @@ For each healthcare-related segment you identify:
    - Low: Brief or tangential healthcare references
 6. List the specific healthcare topics covered
 
+## QUOTE EXTRACTION RULES - CRITICAL
+
+You must extract quotes with 100% verbatim accuracy. Follow these rules exactly:
+
+1. COPY CHARACTER-BY-CHARACTER: Extract quotes by copying the exact characters from the transcript. Do not paraphrase, do not summarize, and do not 'clean up' the text.
+2. INCLUDE EVERYTHING BETWEEN START AND END POINTS: Once you identify where a quote starts and ends, include ALL words between those points—including:
+  - Filler words (um, uh, you know, like, so)
+  - Repeated words or stutters
+  - False starts and self-corrections
+  - Grammatical errors in the original
+  - Run-on sentences
+3. DO NOT SKIP SENTENCES: If your quote spans multiple sentences, every sentence between your start and end point must be included. Never omit middle sentences to make a quote more concise.
+4. DO NOT REMOVE DUPLICATE WORDS: If the speaker says 'we we need to' or 'the the problem is' keep both instances of the repeated word.
+5. PRESERVE ORIGINAL ERRORS: If the transcript contains typos, incorrect grammar, or transcription errors, preserve them exactly.
+6. VERIFICATION STEP: Before finalizing each quote, locate it in the transcript and verify word-for-word that your extracted quote matches exactly. If even one word differs, correct it.
+
+EXAMPLE OF CORRECT EXTRACTION:
+
+Transcript says: 'We are we are really committed to to making sure that our doctors, our family physicians especially, have the the support they need and and we're going to keep working on this.'
+
+CORRECT quote: 'We are we are really committed to to making sure that our doctors, our family physicians especially, have the the support they need and and we're going to keep working on this.'
+
+INCORRECT quote: 'We are really committed to making sure that our doctors, our family physicians especially, have the support they need and we're going to keep working on this.'
+
 ## Output Format
 You must output valid JSON with this exact structure:
 ```json
 {
-  \"overall_summary\": \"write a very brief 2-3 sentence summary of any discussion on healthcare or physicians in the episode. Avoid political spin. Don't get into specific details. Don't summarize non-healthcare content. Don't talk about where discussions occur in the episode (e.g., at the end). Don't quote specific numbers like '18-minute healthcare workers strike' nor '16,000 AOPE members'.\",
+  \"overall_summary\": \"write a very brief 2-3 sentence summary of any discussion related to physicians in the episode. Avoid political spin. Do not get into specific details. Do not summarize non-healthcare content. Do not talk about where discussions occur in the episode (e.g., 'at the end'). Do not quote specific numbers like '18-minute healthcare workers strike' nor '16,000 AOPE members'.\",
   \"healthcare_focus_score\": 75,
   \"total_healthcare_minutes\": 12.5,
   \"highlights\": [
@@ -270,7 +294,7 @@ You must output valid JSON with this exact structure:
 - Only output the JSON, no additional text or explanation
 - healthcare_focus_score is 0-100 representing percentage of episode discussing healthcare
 - Include ALL healthcare-related segments, even brief mentions (with Low relevance)
-- Quotes must be exact text from the transcript
+- Quotes must be EXACT verbatim text from the transcript—copy them character by character, preserving all filler words, repetitions, errors, and every sentence in between
 - quote_timestamp must be the EXACT timestamp when the quote begins in the transcript (used for audio clips)
 - If no healthcare content is found, return empty highlights array with score 0"
 
