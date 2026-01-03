@@ -30,6 +30,8 @@ The episode transcript is computer-generated from the radio show audio recording
 - **Quarto**: Document generation and website publishing
 - **FFmpeg**: Audio clip extraction
 
+*Note: this app current does not run on AMA infrastructure; only the static results are posted here.*
+
 # Healthcare Topics
 
 The analysis focuses on content related to:

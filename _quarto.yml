@@ -43,6 +43,8 @@ website:
             text: October 25, 2025
           - href: episodes/2025-10-04-your-province-your-premier-10042025.qmd
             text: October 4, 2025
+          - href: episodes/2025-09-20-your-province-your-premier-9202025.qmd
+            text: September 20, 2025
       - about.qmd
 
 format:

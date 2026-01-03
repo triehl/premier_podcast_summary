@@ -6,7 +6,7 @@ CONFIG <- list(
   rss_url = "https://feeds.megaphone.fm/CORU5449522127",
 
   # Processing limits
-  max_episodes = 6, # Initially process last 5 episodes
+  max_episodes = 7, # Initially process last 5 episodes
 
   # API endpoints
   assemblyai_base_url = "https://api.assemblyai.com/v2",
@@ -27,9 +27,8 @@ CONFIG <- list(
 
   # Audio clip settings
   max_clips_per_episode = 10,
-  clip_buffer_before = 2, # seconds before highlight
-  clip_buffer_after = 2, # seconds after highlight
-  max_utterance_duration = 15000, # maximum time a single person can be speaking before a new timestamp created (15 sec)
+  clip_buffer_before = 1, # seconds before highlight
+  clip_buffer_after = 1, # seconds after highlight
 
   # File paths (relative to project root)
   data_dir = "data/episodes",

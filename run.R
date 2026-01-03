@@ -590,77 +590,17 @@ process_single_episode <- function(episode_number = 1, force = FALSE) {
 }
 
 
-# ============================================================================
-# Execute
-# ============================================================================
-
-# For rerunning transcript analysis
-# Delete all data files except episode.mp3, assemblyai_raw.json, speaker_mapping.json
-clean_episode_folders <- function() {
-  data_dir <- file.path(get_project_root(), CONFIG$data_dir)
-  episode_dirs <- dir_ls(data_dir, type = "directory")
-
-  for (episode_dir in episode_dirs) {
-    # Delete files except the ones to keep
-    files <- dir_ls(episode_dir, type = "file")
-    files_to_delete <- files[
-      !path_file(files) %in%
-        c(
-          "episode.mp3",
-          "assemblyai_raw.json",
-          "speaker_mapping.json",
-          #"analysis.json",
-          "transcript.md",
-          "transcript.json"
-        )
-    ]
-    file_delete(files_to_delete)
-
-    # Delete clips subfolder if it exists
-    clips_dir <- file.path(episode_dir, "clips")
-    if (dir_exists(clips_dir)) {
-      dir_delete(clips_dir)
-    }
-
-    cli_alert_info("Cleaned {episode_dir}")
-  }
-}
-
-# write a function that searches cache/episodes_cache.json for episodes with status "complete" and resets their status to "transcribed"
-reset_processing_status <- function() {
-  # clean out cached files
-  clean_episode_folders()
-
-  cache_df <- load_episodes_cache()
-
-  completed_episodes <- cache_df |>
-    dplyr::filter(status == EPISODE_STATUS$complete)
-
-  for (i in seq_len(nrow(completed_episodes))) {
-    episode <- completed_episodes[i, ]
-    cli_alert_info("Resetting episode {episode$guid} status")
-    cache_df <- update_episode_status(
-      episode$guid,
-      EPISODE_STATUS$formatted,
-      cache_df
-    )
-  }
-}
-
 #---------------------------------------------------------------------------
-
-# For testing
-#
-# reset_processing_status()
+# RUN PIPELINE
+#---------------------------------------------------------------------------
 
 run_pipeline(CONFIG$max_episodes, force_reprocess = TRUE, skip_render = FALSE)
 
-
-# Run the pipeline if this script is executed directly
 # zip the contents of the _book directory, excluding episode.mp3 files
 files_to_zip <- dir_ls(".", recurse = TRUE, type = "file") |>
   discard(~ str_detect(path_file(.x), "^episode\\.mp3$")) |>
-  discard(~ str_detect(.x, "data/episodes/.*\\.md$"))
+  discard(~ str_detect(.x, "(^|/)data/")) |>
+  discard(~ str_detect(.x, "(^|/)R/"))
 
 zip::zip("output.zip", files = files_to_zip)
 cli_alert_success(

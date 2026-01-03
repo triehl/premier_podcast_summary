@@ -116,7 +116,7 @@ title: "%s"
   content <- c(
     content,
     sprintf(
-      "\n# Full Transcript\n\n[View the complete transcript](%s.qmd)\n",
+      "\n# Full Transcript\n\n[View the full transcript](%s.qmd)\n",
       transcript_slug
     )
   )
@@ -220,13 +220,32 @@ format_highlight_block <- function(
         exact_quote <- find_exact_quote_in_transcript(h$quote, transcript_md)
         quote_for_link <- if (!is.null(exact_quote)) exact_quote else h$quote
 
-        encoded_quote <- utils::URLencode(quote_for_link, reserved = TRUE)
+        # Split quote into words
+        words <- strsplit(quote_for_link, "\\s+")[[1]]
+
+        # Extract first and last 10 words
+        first_10_words <- paste(words[1:min(10, length(words))], collapse = " ")
+        last_10_words <- paste(
+          words[max(1, length(words) - 9):length(words)],
+          collapse = " "
+        )
+
+        # URL-encode the word sequences
+        encoded_first <- utils::URLencode(first_10_words, reserved = TRUE)
+        encoded_last <- utils::URLencode(last_10_words, reserved = TRUE)
+
+        # FIX: quarto renders a plain ' as %E2%80%99 so we need to encode that too
+        encoded_first <- gsub("%27", "%E2%80%99", encoded_first, fixed = TRUE)
+        encoded_last <- gsub("%27", "%E2%80%99", encoded_last, fixed = TRUE)
+
+        # create link
         lines <- c(
           lines,
           sprintf(
-            "<a href=\"%s.html#:~:text=%s\">View quote in full transcript</a>",
+            "<a href=\"%s.html#:~:text=%s,%s\">View quote in full transcript</a>",
             transcript_slug,
-            encoded_quote
+            encoded_first,
+            encoded_last
           )
         )
       }
